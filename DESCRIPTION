@@ -1,0 +1,18 @@
+Package: RFirmsGeo
+Version: 0.1-0
+Date: 2015-10-20
+Title: Tools for georeferencing FIRMS stocks and fisheries
+Author: Emmanuel Blondel <emmanuel.blondel1@gmail.com>
+Maintainer: Emmanuel Blondel <emmanuel.blondel1@gmail.com>
+Depends:
+    R (>= 2.15)
+Imports:
+    methods, httr, XML, sp, RFigisGeo, cleangeo, rgeos
+Suggests:
+    testthat
+Description:
+  RFirmsGeo provides a set of facilities to georeference
+  FIRMS stocks and fisheries factsheet web-resources.
+License: GPL (>= 2)
+URL: https://github.com/openfigis/RFirmsGeo
+BugReports: https://github.com/openfigis/RFirmsGeo/issues
