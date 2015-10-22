@@ -24,7 +24,6 @@ fetchFactsheetAreaInfo <- function(xml){
                      out <- NULL
                      foreignIdXML <- getNodeSet(xmlDoc(x), "//ns:ForeignID", c(ns = fiNS))
                      if(length(foreignIdXML) > 0){
-                       foreignIdXML <- foreignIdXML[[1]]
                        out <- buildGISLayerInfo(xmlGetAttr(foreignIdXML, "CodeSystem"), xmlGetAttr(foreignIdXML, "Code"))
                      }
                      return(out)

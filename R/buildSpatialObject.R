@@ -102,6 +102,7 @@ buildSpatialObject <- function(item, lang, host, domain, cleanGeom = TRUE, verbo
       out.sp <- sp.list[[1]] #to discuss this rule
     }
     out.sp <- gUnaryUnion(out.sp)
+    out.sp <- clgeo_Clean(out.sp)
     
   }
   
