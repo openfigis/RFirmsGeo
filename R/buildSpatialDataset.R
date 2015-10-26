@@ -1,7 +1,6 @@
 #' @name buildSpatialDataset
 #' @aliases buildSpatialDataset
 #' @title buildSpatialDataset
-#' @export
 #' 
 #' @description
 #' A function to build a spatial dataset for a given factsheet domain.
@@ -75,8 +74,10 @@ buildSpatialDataset <- function(host, domain, cleanGeom = TRUE, verbose = TRUE,
   out.sp <- do.call("rbind", out.sp)
   
   #adding domain as attribute
-  out.sp@data <- cbind(DOMAIN = rep(domain,nrow(out.sp@data)),
-                       out.sp@data, stringsAsFactors = FALSE)
+  if(!is.null(out.sp)){
+    out.sp@data <- cbind(DOMAIN = rep(domain,nrow(out.sp@data)),
+                        out.sp@data, stringsAsFactors = FALSE)
+  }
   
   return(out.sp)
 }

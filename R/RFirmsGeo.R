@@ -15,13 +15,5 @@
 #'    License: \tab GPL(>=2.0)\cr
 #'    LazyLoad: \tab yes\cr
 #'  }
-#'
-#' @import methods
-#' @import httr
-#' @import XML
-#' @import sp
-#' @import RFigisGeo
-#' @import cleangeo
-#' @import rgeos
 #' 
 NULL

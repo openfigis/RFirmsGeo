@@ -1,7 +1,6 @@
 #' @name buildGISLayerInfo
 #' @aliases buildGISLayerInfo
 #' @title buildGISLayerInfo
-#' @export
 #' 
 #' @description
 #' A utility function to build a GIS layer info, using \code{codesystem} and 
@@ -95,6 +94,16 @@ buildGISLayerInfo <- function(codesystem, code){
       url = gsUrl,
       typeName = paste0("fifao:",toupper(codesystem)),
       propertyName = "RFB",
+      propertyValue = code,
+      level = infoLevel,
+      rank = NA)
+  
+  #7. eez (nja)  
+  }else if(codesystem == "eez"){
+    layer <- list(
+      url = gsUrl,
+      typeName = "fifao:NJA",
+      propertyName = "ISO3",
       propertyValue = code,
       level = infoLevel,
       rank = NA)

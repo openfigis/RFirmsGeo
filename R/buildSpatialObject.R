@@ -1,7 +1,6 @@
 #' @name buildSpatialObject
 #' @aliases buildSpatialObject
 #' @title buildSpatialObject 
-#' @export
 #'
 #' @description
 #' A function to build a spatial object for a given factsheet
@@ -24,13 +23,16 @@ buildSpatialObject <- function(item, lang, host, domain, cleanGeom = TRUE, verbo
   
   fs <- fetchFactsheetInfo(item, lang, domain, host, verbose)
   fs.sp <- NULL
-  if(!is.null(fs)){
+  if(!is.null(fs) & nrow(fs$georef) > 0){    
     #georef as data.frame
     fs$georef <- cbind(rep(item, nrow(fs$georef)), fs$georef,
                        stringsAsFactors = FALSE)
     colnames(fs$georef) <- c("FigisID", "url", "typeName",
                              "propertyName", "propertyValue",
                              "level", "rank")
+    if(verbose){
+      print(fs$georef)
+    }
   }else{
     return(NULL)
   }
@@ -61,6 +63,9 @@ buildSpatialObject <- function(item, lang, host, domain, cleanGeom = TRUE, verbo
   if(length(sp.list) > 1){
     
     #performing intersection
+    if(verbose){
+      message("Intersecting (seq 1)...")
+    }  
     int <- NULL
     int <- tryCatch(intersection(sp.list[[1]], sp.list[[2]]),
                     error = function(err){
@@ -73,6 +78,12 @@ buildSpatialObject <- function(item, lang, host, domain, cleanGeom = TRUE, verbo
     }
     if(length(sp.list) > 2 & !is.null(int)){
       for(i in 3:length(sp.list)){
+        
+        intNb <- i-1
+        if(verbose){
+          message(paste0("Intersecting (seq ",intNb,")..."))
+        }
+        
         tmpint <- NULL
         tmpint <- tryCatch(intersection(int, sp.list[[i]]),
                         error = function(err){

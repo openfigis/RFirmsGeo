@@ -1,7 +1,6 @@
 #' @name fetchFactsheetAreaInfo
 #' @aliases fetchFactsheetAreaInfo
 #' @title fetchFactsheetAreaInfo
-#' @export
 #' 
 #' @description
 #' A function to fetch the water area information from the \code{waterAreaRef} 
@@ -24,6 +23,7 @@ fetchFactsheetAreaInfo <- function(xml){
                      out <- NULL
                      foreignIdXML <- getNodeSet(xmlDoc(x), "//ns:ForeignID", c(ns = fiNS))
                      if(length(foreignIdXML) > 0){
+                       foreignIdXML <- foreignIdXML[[1]]
                        out <- buildGISLayerInfo(xmlGetAttr(foreignIdXML, "CodeSystem"), xmlGetAttr(foreignIdXML, "Code"))
                      }
                      return(out)
@@ -56,7 +56,6 @@ fetchFactsheetAreaInfo <- function(xml){
 #' @name fetchFactsheetSpeciesInfo
 #' @aliases fetchFactsheetSpeciesInfo
 #' @title fetchFactsheetSpeciesInfo
-#' @export
 #' 
 #' @description
 #' A function to fetch the species information from the \code{SpeciesRef} node of
@@ -96,7 +95,6 @@ fetchFactsheetSpeciesInfo <- function(xml){
 #' @name fetchFactsheetInfo
 #' @aliases fetchFactsheetInfo
 #' @title fetchFactsheetInfo
-#' @export
 #' 
 #' @description
 #' A function to fetch the factsheet information from a factsheet XML

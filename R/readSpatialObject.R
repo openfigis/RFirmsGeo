@@ -2,8 +2,6 @@
 #' @aliases readSpatialObject
 #' @title readSpatialObject
 #' 
-#' @export
-#' 
 #' @description
 #' A function to fetch the water area information from the \code{waterAreaRef} 
 #' node of a factsheet XML.
