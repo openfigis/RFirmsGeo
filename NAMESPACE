@@ -1,10 +1,11 @@
 import(methods)
+import(sp)
+import(maptools)
 import(RFigisGeo)
 import(XML)
 import(cleangeo)
 import(httr)
 import(rgeos)
-import(sp)
 
 export(buildGISLayerInfo)
 export(buildSpatialDataset)
