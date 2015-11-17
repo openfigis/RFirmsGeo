@@ -124,6 +124,7 @@ buildSpatialObject <- function(item, lang, host, domain, cleanGeom = TRUE, verbo
     out.df <- data.frame(
       FIGIS_ID = FigisID,
       TITLE = title,
+      LANG = lang,
       SURFACE = gArea(spTransform(out.sp, areaCRS)),
       stringsAsFactors = FALSE)
     row.names(out.df) <- out.df$FIGIS_ID
