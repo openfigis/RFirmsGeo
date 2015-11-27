@@ -128,9 +128,10 @@ buildSpatialObject <- function(item, lang, host, domain, cleanGeom = TRUE, verbo
     areaCRS <- CRS("+proj=eck4 +lon_0=Central Meridian +x_0=False Easting +y_0=False Northing")
     out.df <- data.frame(
       FIGIS_ID = FigisID,
-      TITLE = title,
-      GEOREF = georef,
       LANG = lang,
+      TITLE = title,
+      GEOREF = georef$title,
+      SCALE = georef$scale,
       SURFACE = gArea(spTransform(out.sp, areaCRS)),
       stringsAsFactors = FALSE)
     row.names(out.df) <- out.df$FIGIS_ID

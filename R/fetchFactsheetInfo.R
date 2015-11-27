@@ -97,10 +97,11 @@ fetchFactsheetSpeciesInfo <- function(xml){
 #' 
 #' @description
 #' A function to fetch the georeference information from the \code{Georeference} 
-#' node of a factsheet XML.
+#' node of a factsheet XML. Information is presented as named list, containing
+#' the scale and title of the georeference.
 #'
 #' @param xml an object of class "XmlInternalDocument"
-#' @return an object of class "character"
+#' @return an object of class "list"
 #' 
 #' @note function used internally to build FIRMS spatial objects
 #' 
@@ -109,8 +110,10 @@ fetchFactsheetSpeciesInfo <- function(xml){
 fetchFactsheetGeorefInfo <- function(xml){
   fiNS <- "http://www.fao.org/fi/figis/devcon/"
   dcNS <- "http://purl.org/dc/elements/1.1/"
-  georefXML <- getNodeSet(xml, "//fi:GeoReference/dc:Title", c(fi = fiNS, dc = dcNS))
-  georef <- xmlValue(georefXML[[1]])
+  georefXML <- getNodeSet(xml, "//fi:GeoReference", c(fi = fiNS))[[1]]
+  scaleXML <- getNodeSet(xmlDoc(georefXML), "//fi:SpatialScale", c(fi = fiNS))[[1]]
+  titleXML <- getNodeSet(xmlDoc(georefXML), "//dc:Title", c(dc = dcNS))[[1]]
+  georef <- list(scale = xmlValue(scaleXML), title = xmlValue(titleXML))
   return(georef)
 }
 
