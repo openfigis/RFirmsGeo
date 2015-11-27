@@ -10,11 +10,12 @@ fetchFactsheetGeorefInfo(xml)
 \item{xml}{an object of class "XmlInternalDocument"}
 }
 \value{
-an object of class "character"
+an object of class "list"
 }
 \description{
 A function to fetch the georeference information from the \code{Georeference}
-node of a factsheet XML.
+node of a factsheet XML. Information is presented as named list, containing
+the scale and title of the georeference.
 }
 \note{
 function used internally to build FIRMS spatial objects
