@@ -171,7 +171,12 @@ fetchFactsheetInfo <- function(factsheet, lang, domain, host, verbose = TRUE){
       waterAreaList <- fetchFactsheetAreaInfo(fsXML)
       speciesList <- fetchFactsheetSpeciesInfo(fsXML)
       waterRefs <- rbind(waterAreaList, speciesList)
-      waterRefs <- waterRefs[order(waterRefs$weight, decreasing = TRUE),]
+      print(waterRefs)
+      if(!is.null(waterRefs)){
+        if(nrow(waterRefs) > 0){
+          waterRefs <- waterRefs[order(waterRefs$weight, decreasing = TRUE),]
+        }
+      }
       
       out <- list(
         title = title,

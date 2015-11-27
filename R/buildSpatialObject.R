@@ -23,15 +23,19 @@ buildSpatialObject <- function(item, lang, host, domain, cleanGeom = TRUE, verbo
   
   fs <- fetchFactsheetInfo(item, lang, domain, host, verbose)
   fs.sp <- NULL
-  if(!is.null(fs) & nrow(fs$waterRefs) > 0){    
-    #waterRefs as data.frame
-    fs$waterRefs <- cbind(rep(item, nrow(fs$waterRefs)), fs$waterRefs,
-                       stringsAsFactors = FALSE)
-    colnames(fs$waterRefs) <- c("FigisID", "url", "typeName",
-                             "propertyName", "propertyValue",
-                             "level", "rank")
-    if(verbose){
-      print(fs$waterRefs)
+  if(!is.null(fs)){
+    if(nrow(fs$waterRefs) > 0){    
+      #waterRefs as data.frame
+      fs$waterRefs <- cbind(rep(item, nrow(fs$waterRefs)), fs$waterRefs,
+                         stringsAsFactors = FALSE)
+      colnames(fs$waterRefs) <- c("FigisID", "url", "typeName",
+                               "propertyName", "propertyValue",
+                               "level", "rank")
+      if(verbose){
+        print(fs$waterRefs)
+      }
+    }else{
+      return(NULL)
     }
   }else{
     return(NULL)
