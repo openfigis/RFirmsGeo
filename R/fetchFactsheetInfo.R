@@ -113,7 +113,7 @@ fetchFactsheetGeorefInfo <- function(xml){
   georefXML <- getNodeSet(xml, "//fi:GeoReference", c(fi = fiNS))[[1]]
   scaleXML <- getNodeSet(xmlDoc(georefXML), "//fi:SpatialScale", c(fi = fiNS))[[1]]
   titleXML <- getNodeSet(xmlDoc(georefXML), "//dc:Title", c(dc = dcNS))[[1]]
-  georef <- list(scale = xmlValue(scaleXML), title = xmlValue(titleXML))
+  georef <- list(scale = xmlGetAttr(scaleXML,"Value"), title = xmlValue(titleXML))
   return(georef)
 }
 
