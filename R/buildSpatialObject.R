@@ -23,22 +23,23 @@ buildSpatialObject <- function(item, lang, host, domain, cleanGeom = TRUE, verbo
   
   fs <- fetchFactsheetInfo(item, lang, domain, host, verbose)
   fs.sp <- NULL
-  if(!is.null(fs) & nrow(fs$georef) > 0){    
-    #georef as data.frame
-    fs$georef <- cbind(rep(item, nrow(fs$georef)), fs$georef,
+  if(!is.null(fs) & nrow(fs$waterRefs) > 0){    
+    #waterRefs as data.frame
+    fs$waterRefs <- cbind(rep(item, nrow(fs$waterRefs)), fs$waterRefs,
                        stringsAsFactors = FALSE)
-    colnames(fs$georef) <- c("FigisID", "url", "typeName",
+    colnames(fs$waterRefs) <- c("FigisID", "url", "typeName",
                              "propertyName", "propertyValue",
                              "level", "rank")
     if(verbose){
-      print(fs$georef)
+      print(fs$waterRefs)
     }
   }else{
     return(NULL)
   }
   
   title <- fs$title
-  items <- fs$georef
+  georef <- fs$georef
+  items <- fs$waterRefs
     
   #figisID
   FigisID <- unique(items$FigisID)
@@ -124,6 +125,7 @@ buildSpatialObject <- function(item, lang, host, domain, cleanGeom = TRUE, verbo
     out.df <- data.frame(
       FIGIS_ID = FigisID,
       TITLE = title,
+      GEOREF = georef,
       LANG = lang,
       SURFACE = gArea(spTransform(out.sp, areaCRS)),
       stringsAsFactors = FALSE)

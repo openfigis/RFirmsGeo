@@ -11,7 +11,7 @@
 #'        be validated with \pkg{cleangeo}. Default value is TRUE.
 #' @param verbose an object of class "logical" either logs have to be printed out.
 #'        Default value is TRUE.
-#' @param ids a vector of indexes for which the computation has to be run
+#' @param ids a vector of resource IDs for which the computation has to be run
 #' @param exportPartialResults if partial shapefiles have to be exported Default
 #'        is FALSE.
 #' @param exportPath the path were shapefiles should be exported
@@ -52,7 +52,7 @@ buildSpatialDataset <- function(host, domain, cleanGeom = TRUE, verbose = TRUE,
   )
   
   if(!is.null(ids)){
-    refs <- refs[ids,]
+    refs <- refs[refs$factsheet %in% ids,]
   }
   
   out.sp <- lapply(1:nrow(refs),

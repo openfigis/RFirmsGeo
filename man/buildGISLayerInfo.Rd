@@ -20,9 +20,15 @@ A utility function to build a GIS layer info, using \code{codesystem} and
 a standard named list with all the information required to query a GIS layer, i.e.
 the \code{url}, \code{typeName}, \code{propertyName}, \code{propertyValue}.
 
-Additional fields, are added respectively to report the info \code{level}
-and the \code{rank}. Both fields are required to optimize the query of FAO
-fishing areas, by using the finest fishing area granularity.
+Additional fields, are added to report:
+- the info \code{level} and the \code{rank}. Both fields are required to
+optimize the query of FAO fishing areas, by using the finest fishing area
+granularity.
+- a \code{weight} specific to each layer. The weight is reversely proportional
+to the geographic extent of the layer features. Maximum weight is attributed
+to EEZs. In case of no overlap, or intersection failure, the feature that will
+be kept to georeference a resource will be the one with the highest weight
+(ie highest resolution).
 }
 \note{
 function used internally to build FIRMS spatial objects

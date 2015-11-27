@@ -18,7 +18,7 @@ be validated with \pkg{cleangeo}. Default value is TRUE.}
 \item{verbose}{an object of class "logical" either logs have to be printed out.
 Default value is TRUE.}
 
-\item{ids}{a vector of indexes for which the computation has to be run}
+\item{ids}{a vector of resource IDs for which the computation has to be run}
 
 \item{exportPartialResults}{if partial shapefiles have to be exported Default
 is FALSE.}

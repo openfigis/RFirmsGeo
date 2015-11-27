@@ -91,6 +91,29 @@ fetchFactsheetSpeciesInfo <- function(xml){
   return(speciesList)
 }
 
+#' @name fetchFactsheetGeorefInfo
+#' @aliases fetchFactsheetGeorefInfo
+#' @title fetchFactsheetGeorefInfo
+#' 
+#' @description
+#' A function to fetch the georeference information from the \code{Georeference} 
+#' node of a factsheet XML.
+#'
+#' @param xml an object of class "XmlInternalDocument"
+#' @return an object of class "character"
+#' 
+#' @note function used internally to build FIRMS spatial objects
+#' 
+#' @author Emmanuel Blondel, \email{emmanuel.blondel1@@gmail.com}
+#'
+fetchFactsheetGeorefInfo <- function(xml){
+  fiNS <- "http://www.fao.org/fi/figis/devcon/"
+  dcNS <- "http://purl.org/dc/elements/1.1/"
+  georefXML <- getNodeSet(xml, "//fi:GeoReference/dc:Title", c(fi = fiNS, dc = dcNS))
+  georef <- xmlValue(georefXML[[1]])
+  return(georef)
+}
+
 
 #' @name fetchFactsheetInfo
 #' @aliases fetchFactsheetInfo
@@ -126,6 +149,7 @@ fetchFactsheetInfo <- function(factsheet, lang, domain, host, verbose = TRUE){
                        NULL)
   
   fsUrl <- sprintf("%s/figis/ws/factsheets/domain/%s/factsheet/%s/language/%s/xpath/FIGISDoc/%s", host, domain, factsheet, lang, xpathIdent)
+  print(fsUrl)
   req <- GET(fsUrl)
   out <- NULL
   if(http_status(req)$category != "success") {
@@ -140,15 +164,19 @@ fetchFactsheetInfo <- function(factsheet, lang, domain, host, verbose = TRUE){
       #get factsheet title
       title <- xmlValue(titleXML[[1]])
       
-      #water area references
-      waterAreaList <- fetchFactsheetAreaInfo(fsXML)
+      #georeference title
+      georef <- fetchFactsheetGeorefInfo(fsXML)
       
-      #species refs
+      #water references
+      waterAreaList <- fetchFactsheetAreaInfo(fsXML)
       speciesList <- fetchFactsheetSpeciesInfo(fsXML)
+      waterRefs <- rbind(waterAreaList, speciesList)
+      waterRefs <- waterRefs[order(waterRefs$weight, decreasing = TRUE),]
       
       out <- list(
         title = title,
-        georef = rbind(waterAreaList, speciesList)
+        georef = georef,
+        waterRefs = waterRefs
       )
     }
   }	

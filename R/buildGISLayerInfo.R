@@ -8,9 +8,15 @@
 #' a standard named list with all the information required to query a GIS layer, i.e.
 #' the \code{url}, \code{typeName}, \code{propertyName}, \code{propertyValue}.
 #' 
-#' Additional fields, are added respectively to report the info \code{level} 
-#' and the \code{rank}. Both fields are required to optimize the query of FAO
-#' fishing areas, by using the finest fishing area granularity.
+#' Additional fields, are added to report:
+#' - the info \code{level} and the \code{rank}. Both fields are required to 
+#' optimize the query of FAO fishing areas, by using the finest fishing area
+#' granularity.
+#' - a \code{weight} specific to each layer. The weight is reversely proportional
+#' to the geographic extent of the layer features. Maximum weight is attributed
+#' to EEZs. In case of no overlap, or intersection failure, the feature that will
+#' be kept to georeference a resource will be the one with the highest weight 
+#' (ie highest resolution).
 #'
 #' @param codesystem an object of class "character"
 #' @param code an object of class "character"
@@ -34,6 +40,7 @@ buildGISLayerInfo <- function(codesystem, code){
                       "fao_sub_unit" = 5,
                       NA	
   )
+  fishingareaWeight <- infoLevel
   
   #cases
   #1. fishing areas
@@ -46,7 +53,8 @@ buildGISLayerInfo <- function(codesystem, code){
       propertyName = "F_CODE",
       propertyValue = code,
       level = infoLevel,
-      rank = substr(code,1,2))
+      rank = substr(code,1,2),
+      weight = fishingareaWeight)
   
   #2. species distributions
   }else if(codesystem == "fao3alpha"){
@@ -56,7 +64,8 @@ buildGISLayerInfo <- function(codesystem, code){
       propertyName = NA,
       propertyValue = NA,
       level = infoLevel,
-      rank = NA)
+      rank = NA,
+      weight = 0)
   
   #3. lmes
   }else if(codesystem == "lme"){
@@ -66,7 +75,8 @@ buildGISLayerInfo <- function(codesystem, code){
       propertyName = "LME_NUMBER",
       propertyValue = code,
       level = infoLevel,
-      rank = NA)
+      rank = NA,
+      weight = 6)
     
   #4. gfcm_sub_area
   }else if(codesystem == "gfcm_sub_area"){
@@ -76,7 +86,8 @@ buildGISLayerInfo <- function(codesystem, code){
       propertyName = "SMU_CODE",
       propertyValue = code,
       level = infoLevel,
-      rank = NA)
+      rank = NA,
+      weight = 2)
     
   #5. pac_tuna_rep
   }else if(codesystem == "pac_tuna_rep"){
@@ -86,7 +97,8 @@ buildGISLayerInfo <- function(codesystem, code){
       propertyName = "REP_AREA",
       propertyValue = code,
       level = infoLevel,
-      rank = NA)
+      rank = NA,
+      weight = 2)
   
   #6. rfb_comp
   }else if(codesystem == "rfb_comp"){
@@ -96,7 +108,8 @@ buildGISLayerInfo <- function(codesystem, code){
       propertyName = "RFB",
       propertyValue = code,
       level = infoLevel,
-      rank = NA)
+      rank = NA,
+      weight = 1)
   
   #7. eez (nja)  
   }else if(codesystem == "eez"){
@@ -106,7 +119,8 @@ buildGISLayerInfo <- function(codesystem, code){
       propertyName = "ISO3",
       propertyValue = code,
       level = infoLevel,
-      rank = NA)
+      rank = NA,
+      weight = 10)
   
   #other layers (water area refs)
   }else{
@@ -116,7 +130,8 @@ buildGISLayerInfo <- function(codesystem, code){
       propertyName = toupper(codesystem),
       propertyValue = code,
       level = infoLevel,
-      rank = NA)
+      rank = NA,
+      weight = 1)
   }
   
   layer <- as.data.frame(layer, stringsAsFactors = FALSE)
