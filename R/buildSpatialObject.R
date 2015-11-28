@@ -101,7 +101,8 @@ buildSpatialObject <- function(item, lang, host, domain, cleanGeom = TRUE, verbo
           int <- tmpint
         }
         if(!is.null(int)){
-          int <- clgeo_Clean(int)
+          cleanint <- clgeo_Clean(int)
+          int <- cleanint
         }else{
           break;
         }
@@ -111,9 +112,6 @@ buildSpatialObject <- function(item, lang, host, domain, cleanGeom = TRUE, verbo
     #perform union
     if(!is.null(int)){
       out.sp <- int
-      if(cleanGeom){
-        out.sp <- clgeo_Clean(out.sp)
-      }
     }else{
       out.sp <- sp.list[[1]] #to discuss this rule
     }
