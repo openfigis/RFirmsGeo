@@ -101,19 +101,35 @@ fetchFactsheetSpeciesInfo <- function(xml){
 #' the scale and title of the georeference.
 #'
 #' @param xml an object of class "XmlInternalDocument"
+#' @param domain an object of class "character representing the FIRMS resource
 #' @return an object of class "list"
 #' 
 #' @note function used internally to build FIRMS spatial objects
 #' 
 #' @author Emmanuel Blondel, \email{emmanuel.blondel1@@gmail.com}
 #'
-fetchFactsheetGeorefInfo <- function(xml){
+fetchFactsheetGeorefInfo <- function(xml, domain){
+  
+  scale <- as.character(NA)
+  title <- as.character(NA)
+  
   fiNS <- "http://www.fao.org/fi/figis/devcon/"
   dcNS <- "http://purl.org/dc/elements/1.1/"
-  georefXML <- getNodeSet(xml, "//fi:GeoReference", c(fi = fiNS))[[1]]
-  scaleXML <- getNodeSet(xmlDoc(georefXML), "//fi:SpatialScale", c(fi = fiNS))[[1]]
-  titleXML <- getNodeSet(xmlDoc(georefXML), "//dc:Title", c(dc = dcNS))[[1]]
-  georef <- list(scale = xmlGetAttr(scaleXML,"Value"), title = xmlValue(titleXML))
+  
+  georefElement <- switch(domain,
+                  "fishery" = "GeoReference",
+                  "resource" = "WaterAreaOverview",
+                  NULL)
+  georefXML <- getNodeSet(xml, paste0("//fi:",georefElement), c(fi = fiNS))
+  if(length(georefXML) > 0){
+    georefXML <- georefXML[[1]]
+    scaleXML <- getNodeSet(xmlDoc(georefXML), "//fi:SpatialScale", c(fi = fiNS))
+    if(length(scaleXML) > 0) scale <- xmlGetAttr(scaleXML[[1]], "Value")
+    titleXML <- getNodeSet(xmlDoc(georefXML), "//dc:Title", c(dc = dcNS))
+    if(length(titleXML) > 0) title <- xmlValue(titleXML[[1]])
+  }
+ 
+  georef <- list(scale = scale, title = title)
   return(georef)
 }
 
@@ -168,7 +184,7 @@ fetchFactsheetInfo <- function(factsheet, lang, domain, host, verbose = TRUE){
       title <- xmlValue(titleXML[[1]])
       
       #georeference title
-      georef <- fetchFactsheetGeorefInfo(fsXML)
+      georef <- fetchFactsheetGeorefInfo(fsXML, domain)
       
       #water references
       waterAreaList <- fetchFactsheetAreaInfo(fsXML)

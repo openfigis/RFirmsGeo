@@ -7,7 +7,7 @@ Maintainer: Emmanuel Blondel <emmanuel.blondel1@gmail.com>
 Depends:
     R (>= 2.15)
 Imports:
-    methods, httr, XML, sp, maptools, RFigisGeo, cleangeo, rgeos
+    methods, sp, rgeos, maptools, RFigisGeo, cleangeo, httr, XML
 Suggests:
     testthat
 Description:

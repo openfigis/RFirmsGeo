@@ -4,10 +4,12 @@
 \alias{fetchFactsheetGeorefInfo}
 \title{fetchFactsheetGeorefInfo}
 \usage{
-fetchFactsheetGeorefInfo(xml)
+fetchFactsheetGeorefInfo(xml, domain)
 }
 \arguments{
 \item{xml}{an object of class "XmlInternalDocument"}
+
+\item{domain}{an object of class "character representing the FIRMS resource}
 }
 \value{
 an object of class "list"
