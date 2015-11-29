@@ -161,13 +161,7 @@ fetchFactsheetInfo <- function(factsheet, lang, domain, host, verbose = TRUE){
   fiNS <- "http://www.fao.org/fi/figis/devcon/"
   dcNS <- "http://purl.org/dc/elements/1.1/"
   
-  #xpath domain identity
-  xpathIdent <- switch(domain,
-                       "resource" = "AqRes/AqResIdent",
-                       "fishery" = "Fishery/FisheryIdent",
-                       NULL)
-  
-  fsUrl <- sprintf("%s/figis/ws/factsheets/domain/%s/factsheet/%s/language/%s/xpath/FIGISDoc/%s", host, domain, factsheet, lang, xpathIdent)
+  fsUrl <- sprintf("%s/figis/ws/factsheets/domain/%s/factsheet/%s/language/%s", host, domain, factsheet, lang)
   print(fsUrl)
   req <- GET(fsUrl)
   out <- NULL
@@ -190,7 +184,6 @@ fetchFactsheetInfo <- function(factsheet, lang, domain, host, verbose = TRUE){
       waterAreaList <- fetchFactsheetAreaInfo(fsXML)
       speciesList <- fetchFactsheetSpeciesInfo(fsXML)
       waterRefs <- rbind(waterAreaList, speciesList)
-      print(waterRefs)
       if(!is.null(waterRefs)){
         if(nrow(waterRefs) > 0){
           waterRefs <- waterRefs[order(waterRefs$weight, decreasing = TRUE),]
