@@ -4,7 +4,7 @@
 #' 
 #' @description
 #' A function to fetch the water area information from the \code{waterAreaRef} 
-#' node of a factsheet XML.
+#' node of a factsheet XML. Intersecting areas are excluded.
 #'
 #' @param xml an object of class "XmlInternalDocument"
 #' @return an object of class "data.frame" listing the GIS water area layer infos
@@ -15,7 +15,7 @@
 #'
 fetchFactsheetAreaInfo <- function(xml){
   fiNS <- "http://www.fao.org/fi/figis/devcon/"
-  waterAreaRefXML <- getNodeSet(xml, "//ns:WaterAreaRef", c(ns = fiNS))
+  waterAreaRefXML <- getNodeSet(xml, "//ns:WaterAreaList/ns:WaterAreaRef", c(ns = fiNS))
   waterAreaList = as.data.frame(
     do.call("rbind",
             lapply(waterAreaRefXML,
