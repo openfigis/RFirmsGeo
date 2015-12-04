@@ -133,6 +133,36 @@ fetchFactsheetGeorefInfo <- function(xml, domain){
   return(georef)
 }
 
+#' @name fetchFactsheetIndicatorInfo
+#' @aliases fetchFactsheetIndicatorInfo
+#' @title fetchFactsheetIndicatorInfo
+#' 
+#' @description
+#' A function to fetch statistical indicator information
+#'
+#' @param xml an object of class "XmlInternalDocument"
+#' @param indicator an object of class "character representing the xml indicator node
+#' @return an object of class "list"
+#' 
+#' @note function used internally to build FIRMS spatial objects
+#' 
+#' @author Emmanuel Blondel, \email{emmanuel.blondel1@@gmail.com}
+#'
+fetchFactsheetIndicatorInfo <- function(xml, indicator){
+  
+  indvalue <- as.character(NA)
+  
+  fiNS <- "http://www.fao.org/fi/figis/devcon/"
+  
+  indXML = getNodeSet(xml, paste0("//ns:", indicator), c(ns = fiNS))
+  if(length(indXML) > 0){
+    indvalue <- xmlGetAttr(indXML[[1]], "Value") 
+  }
+  
+  ind <- list(key = indicator, value = indvalue)
+  return(ind)
+}
+
 
 #' @name fetchFactsheetInfo
 #' @aliases fetchFactsheetInfo
