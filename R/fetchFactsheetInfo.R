@@ -190,18 +190,18 @@ fetchFactsheetIndicatorInfo <- function(xml, indicator){
 #'
 fetchFactsheetInfo <- function(factsheet, lang, domain, host, verbose = TRUE){
   
-  if(verbose) message(sprintf("-> Extracting information for factsheet %s", factsheet))
+  if(verbose) logger.info(sprintf("Extracting information for factsheet %s", factsheet))
   
   #namespaces
   fiNS <- "http://www.fao.org/fi/figis/devcon/"
   dcNS <- "http://purl.org/dc/elements/1.1/"
   
   fsUrl <- sprintf("%s/figis/ws/factsheets/domain/%s/factsheet/%s/language/%s", host, domain, factsheet, lang)
-  print(fsUrl)
+  logger.info(paste0("GET ", fsUrl))
   req <- GET(fsUrl)
   out <- NULL
   if(http_status(req)$category != "success") {
-    message(sprintf("Factsheet %s does not exist", factsheet))
+    logger.info(sprintf("Factsheet %s does not exist", factsheet))
   }else{
     fsXML <- content(req)
     

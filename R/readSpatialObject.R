@@ -79,9 +79,11 @@ readSpatialObject <- function(layer, cleanGeom = TRUE, verbose = TRUE){
 #' @author Emmanuel Blondel, \email{emmanuel.blondel1@@gmail.com}
 #'
 readSpatialObjects <- function(layers, cleanGeom, verbose){
+  logger.info("Read spatial objects...")
   sp.layers <- lapply(unique(layers$typeName), function(x){
     geoitem <- layers[layers$typeName == x,]
     sp <- readSpatialObject(geoitem, cleanGeom, verbose)
     return(sp)
   })
+  sp.layers <- sp.layers[!sapply(sp.layers, is.null)]
 }

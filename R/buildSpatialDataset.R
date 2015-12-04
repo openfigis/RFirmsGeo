@@ -33,6 +33,7 @@ buildSpatialDataset <- function(host, domain, cleanGeom = TRUE, verbose = TRUE,
   
   #list of items/lang per domain
   domainUrl <- sprintf("%s/figis/ws/factsheets/domain/%s/factsheet", host, domain)
+  logger.info(paste0("GET ", domainUrl))
   req <- GET(domainUrl)
   stop_for_status(req)
   domainXml <- content(req)
@@ -62,7 +63,7 @@ buildSpatialDataset <- function(host, domain, cleanGeom = TRUE, verbose = TRUE,
                      if(exportPartialResults){
                        if(!is.null(out)){
                          if(verbose){
-                           message("Exporting to ESRI shapefile...")
+                           logger.info("Exporting to ESRI shapefile...")
                          }
                          filename <- paste0(domain, "_", refs[x,"factsheet"])
                          exportFeatures(out, file.path = exportPath, file.name = filename)

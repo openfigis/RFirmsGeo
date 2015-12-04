@@ -21,13 +21,22 @@
 #'
 buildSpatialObject <- function(item, lang, host, domain, cleanGeom = TRUE, verbose = TRUE){
   
+  logger.info(sprintf("Build spatial object for %s factsheet %s...", domain, item))
+  
   fs <- fetchFactsheetInfo(item, lang, domain, host, verbose)
   fs.sp <- NULL
   if(!is.null(fs)){
-    if(nrow(fs$waterRefs) == 0){    
+    if(nrow(fs$waterRefs) == 0){
+      logger.warn(sprintf("No geographic reference for %s factsheet %s...", domain, item))
       return(NULL)
+    }else{
+      categories <- unique(fs$waterRefs$category)
+      if(length(categories) == 1 && categories[1] == "SpeciesDistribution"){
+        logger.warn(sprintf("No WaterAreaRef for %s factsheet %s...", domain, item))
+      }
     }
   }else{
+    logger.warn(sprintf("No geographic reference for %s factsheet %s...", domain, item))
     return(NULL)
   }
   
@@ -47,6 +56,10 @@ buildSpatialObject <- function(item, lang, host, domain, cleanGeom = TRUE, verbo
   species.sp.list <- readSpatialObjects(species, cleanGeom, verbose)
   #unify species distributions (if more than one)
   if(length(species.sp.list) > 1){
+    if(verbose){
+      logger.info("Geoprocessing union (species distributions)...")
+      logger.info(sprintf("Union of %s species distributions",length(species.sp.list)))
+    }
     spUnion <- NULL
     for(i in 1:length(species.sp.list)){
       if(i == 1){
@@ -70,7 +83,8 @@ buildSpatialObject <- function(item, lang, host, domain, cleanGeom = TRUE, verbo
   
   #geospatial processing
   if(verbose){
-    message("Geoprocessing...")
+    logger.info("Geoprocessing sequential intersection...")
+    logger.info(sprintf("Sequential intersection with %s (%s intersections)",length(sp.list), length(sp.list)-1))
   }
   out.sp <- NULL
   if(length(sp.list) == 1) out.sp <- gUnaryUnion(sp.list[[1]])
@@ -78,13 +92,13 @@ buildSpatialObject <- function(item, lang, host, domain, cleanGeom = TRUE, verbo
     
     #performing intersection
     if(verbose){
-      message("Intersecting (seq 1)...")
+      logger.info("Intersecting (seq 1)...")
     }  
     int <- NULL
     int <- tryCatch(intersection(sp.list[[1]], sp.list[[2]]),
                     error = function(err){
                       if(verbose){
-                        message("Intersection internal error. Skip intersection process")
+                        logger.info("Intersection internal error. Skip intersection process")
                       }
                     })
     if(!is.null(int)){
@@ -95,14 +109,14 @@ buildSpatialObject <- function(item, lang, host, domain, cleanGeom = TRUE, verbo
         
         intNb <- i-1
         if(verbose){
-          message(paste0("Intersecting (seq ",intNb,")..."))
+          logger.info(paste0("Intersecting (seq ",intNb,")..."))
         }
         
         tmpint <- NULL
         tmpint <- tryCatch(intersection(int, sp.list[[i]]),
                         error = function(err){
                           if(verbose){
-                            message("Intersection internal error. Skip intersection process")
+                            logger.info("Intersection internal error. Skip intersection process")
                           }
                           tmpint <<- NULL
                         })
@@ -119,6 +133,9 @@ buildSpatialObject <- function(item, lang, host, domain, cleanGeom = TRUE, verbo
     }
     
     #perform union
+    if(verbose){
+      logger.info("Geoprocessing union...")
+    }
     if(!is.null(int)){
       out.sp <- int
     }else{
