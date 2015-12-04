@@ -41,14 +41,14 @@ readSpatialObject <- function(layer, cleanGeom = TRUE, verbose = TRUE){
     }
   }
   if(!is.null(cqlFilter)) wfsRequest <- paste0(wfsRequest, "&cql_filter=", cqlFilter)
-  if(verbose) message(wfsRequest)
+  if(verbose) logger.info(paste0("GET ",wfsRequest))
   
   #download data
   out <- NULL
   out <- tryCatch(suppressWarnings(readWFS(wfsRequest, verbose = verbose)),
                   error = function(err){
                     if(verbose){
-                      message("Unknown or Empty filtered GIS web-resource")
+                      logger.warn("Unknown or Empty filtered GIS web-resource")
                     }
                   })
   if(!is.null(out)){
