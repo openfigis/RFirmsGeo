@@ -227,7 +227,7 @@ fetchFactsheetInfo <- function(factsheet, lang, domain, host, verbose = TRUE){
                                    "propertyName", "propertyValue",
                                    "level", "rank")
           if(verbose){
-            print(waterRefs)
+            logger.info(waterRefs)
           }
         }
       }
