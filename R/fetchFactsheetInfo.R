@@ -62,6 +62,7 @@ fetchFactsheetAreaInfo <- function(xml){
 #' a factsheet XML.
 #'
 #' @param xml an object of class "XmlInternalDocument"
+#' @param domain an object of class "character" the FIRMS domain
 #' @return an object of class "data.frame" listing the GIS species distributions 
 #'         layer infos
 #' 
@@ -69,9 +70,13 @@ fetchFactsheetAreaInfo <- function(xml){
 #' 
 #' @author Emmanuel Blondel, \email{emmanuel.blondel1@@gmail.com}
 #'
-fetchFactsheetSpeciesInfo <- function(xml){
+fetchFactsheetSpeciesInfo <- function(xml, domain){
   fiNS <- "http://www.fao.org/fi/figis/devcon/"
-  speciesRefXML <- getNodeSet(xml, "//ns:SpeciesRef", c(ns = fiNS))
+  speciesRefXpath <- switch(domain,
+                    "resource" = "//ns:SpeciesRef",
+                    "fishery" = "//ns:TargetSpecies/ns:SpeciesList/ns:SpeciesRef",
+                    NULL)
+  speciesRefXML <- getNodeSet(xml, speciesRefXpath, c(ns = fiNS))
   speciesList = as.data.frame(
     do.call("rbind",
             lapply(speciesRefXML,
@@ -212,7 +217,7 @@ fetchFactsheetInfo <- function(factsheet, lang, domain, host, verbose = TRUE){
       
       #water references
       waterAreaList <- fetchFactsheetAreaInfo(fsXML)
-      speciesList <- fetchFactsheetSpeciesInfo(fsXML)
+      speciesList <- fetchFactsheetSpeciesInfo(fsXML, domain)
       waterRefs <- rbind(waterAreaList, speciesList)
       if(!is.null(waterRefs)){
         if(nrow(waterRefs) > 0){

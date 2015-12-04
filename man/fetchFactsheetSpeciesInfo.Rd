@@ -4,10 +4,12 @@
 \alias{fetchFactsheetSpeciesInfo}
 \title{fetchFactsheetSpeciesInfo}
 \usage{
-fetchFactsheetSpeciesInfo(xml)
+fetchFactsheetSpeciesInfo(xml, domain)
 }
 \arguments{
 \item{xml}{an object of class "XmlInternalDocument"}
+
+\item{domain}{an object of class "character" the FIRMS domain}
 }
 \value{
 an object of class "data.frame" listing the GIS species distributions
