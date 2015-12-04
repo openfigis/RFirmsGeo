@@ -18,6 +18,8 @@
 #' be kept to georeference a resource will be the one with the highest weight 
 #' (ie highest resolution).
 #'
+#' @param category an object of class "character" describing the category
+#'        Possible values: "WaterArea", "SpeciesDistribution"
 #' @param codesystem an object of class "character"
 #' @param code an object of class "character"
 #' @return an object of class "list"
@@ -27,7 +29,7 @@
 #' @author Emmanuel Blondel, \email{emmanuel.blondel1@@gmail.com}
 #'
 #'
-buildGISLayerInfo <- function(codesystem, code){
+buildGISLayerInfo <- function(category, codesystem, code){
   
   gsUrl <- "http://www.fao.org/figis/geoserver/ows" 
   
@@ -134,6 +136,7 @@ buildGISLayerInfo <- function(codesystem, code){
       weight = 1)
   }
   
+  layer <- c(category = category, layer)
   layer <- as.data.frame(layer, stringsAsFactors = FALSE)
   return(layer)
 }

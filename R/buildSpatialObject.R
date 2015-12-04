@@ -24,17 +24,7 @@ buildSpatialObject <- function(item, lang, host, domain, cleanGeom = TRUE, verbo
   fs <- fetchFactsheetInfo(item, lang, domain, host, verbose)
   fs.sp <- NULL
   if(!is.null(fs)){
-    if(nrow(fs$waterRefs) > 0){    
-      #waterRefs as data.frame
-      fs$waterRefs <- cbind(rep(item, nrow(fs$waterRefs)), fs$waterRefs,
-                         stringsAsFactors = FALSE)
-      colnames(fs$waterRefs) <- c("FigisID", "url", "typeName",
-                               "propertyName", "propertyValue",
-                               "level", "rank")
-      if(verbose){
-        print(fs$waterRefs)
-      }
-    }else{
+    if(nrow(fs$waterRefs) == 0){    
       return(NULL)
     }
   }else{
@@ -48,15 +38,34 @@ buildSpatialObject <- function(item, lang, host, domain, cleanGeom = TRUE, verbo
   #figisID
   FigisID <- unique(items$FigisID)
   
-  #list of typeNames to query
-  typeNames <- unique(items$typeName)
+  #collect list of Spatial objects for water areas
+  waterareas <- items[items$category == "WaterArea",]
+  area.sp.list <- readSpatialObjects(waterareas, cleanGeom, verbose)
   
-  #collect list of Spatial objects
-  sp.list <- lapply(typeNames, function(x){
-    item <- items[items$typeName == x,]
-    sp <- readSpatialObject(item, cleanGeom, verbose)
-    return(sp)
-  })
+  #collect andlist of spatial objects for species distributions
+  species <- items[items$category == "SpeciesDistribution",]
+  species.sp.list <- readSpatialObjects(species, cleanGeom, verbose)
+  #unify species distributions (if more than one)
+  if(length(species.sp.list) > 1){
+    spUnion <- NULL
+    for(i in 1:length(species.sp.list)){
+      if(i == 1){
+        spUnion <- species.sp.list[[i]]
+      }else{
+        spUnion <- gUnion(spUnion, species.sp.list[[i]])
+        spUnion <- clgeo_Clean(spUnion) 
+      }
+    }
+    spUnionId <- paste(species$typeName, collapse="_union_")
+    spUnion <- spChFIDs(spUnion, spUnionId)
+    spUnion.df <- data.frame(gml_id = spUnionId, stringsAsFactors = FALSE)
+    row.names(spUnion.df) <- spUnionId
+    species.sp.list <- SpatialPolygonsDataFrame(Sr = spUnion, data = spUnion.df)
+    
+  }
+  
+  #collect list of spatial objects
+  sp.list <- c(area.sp.list, species.sp.list)
   sp.list <- sp.list[!sapply(sp.list, is.null)]
   
   #geospatial processing

@@ -24,7 +24,7 @@ fetchFactsheetAreaInfo <- function(xml){
                      foreignIdXML <- getNodeSet(xmlDoc(x), "//ns:ForeignID", c(ns = fiNS))
                      if(length(foreignIdXML) > 0){
                        foreignIdXML <- foreignIdXML[[1]]
-                       out <- buildGISLayerInfo(xmlGetAttr(foreignIdXML, "CodeSystem"), xmlGetAttr(foreignIdXML, "Code"))
+                       out <- buildGISLayerInfo("WaterArea",xmlGetAttr(foreignIdXML, "CodeSystem"), xmlGetAttr(foreignIdXML, "Code"))
                      }
                      return(out)
                    })),
@@ -81,7 +81,7 @@ fetchFactsheetSpeciesInfo <- function(xml){
                      foreignIdXML <- foreignIdXML[sapply(foreignIdXML, function(x) xmlGetAttr(x,"CodeSystem") == "fao3alpha")]
                      if(length(foreignIdXML) > 0){
                        foreignIdXML <- foreignIdXML[[1]]
-                       out <- buildGISLayerInfo(xmlGetAttr(foreignIdXML, "CodeSystem"), xmlGetAttr(foreignIdXML, "Code"))
+                       out <- buildGISLayerInfo("SpeciesDistribution",xmlGetAttr(foreignIdXML, "CodeSystem"), xmlGetAttr(foreignIdXML, "Code"))
                      }
                      return(out)
                    })),
@@ -187,6 +187,13 @@ fetchFactsheetInfo <- function(factsheet, lang, domain, host, verbose = TRUE){
       if(!is.null(waterRefs)){
         if(nrow(waterRefs) > 0){
           waterRefs <- waterRefs[order(waterRefs$weight, decreasing = TRUE),]
+          waterRefs <- cbind(rep(factsheet, nrow(waterRefs)), waterRefs, stringsAsFactors = FALSE)
+          colnames(waterRefs) <- c("FigisID", "category","url", "typeName",
+                                   "propertyName", "propertyValue",
+                                   "level", "rank")
+          if(verbose){
+            print(waterRefs)
+          }
         }
       }
       
@@ -195,6 +202,7 @@ fetchFactsheetInfo <- function(factsheet, lang, domain, host, verbose = TRUE){
         georef = georef,
         waterRefs = waterRefs
       )
+     
     }
   }	
   

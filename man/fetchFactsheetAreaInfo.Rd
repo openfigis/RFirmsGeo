@@ -14,7 +14,7 @@ an object of class "data.frame" listing the GIS water area layer infos
 }
 \description{
 A function to fetch the water area information from the \code{waterAreaRef}
-node of a factsheet XML.
+node of a factsheet XML. Intersecting areas are excluded.
 }
 \note{
 function used internally to build FIRMS spatial objects

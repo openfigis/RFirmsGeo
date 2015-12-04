@@ -4,9 +4,12 @@
 \alias{buildGISLayerInfo}
 \title{buildGISLayerInfo}
 \usage{
-buildGISLayerInfo(codesystem, code)
+buildGISLayerInfo(category, codesystem, code)
 }
 \arguments{
+\item{category}{an object of class "character" describing the category
+Possible values: "WaterArea", "SpeciesDistribution"}
+
 \item{codesystem}{an object of class "character"}
 
 \item{code}{an object of class "character"}
