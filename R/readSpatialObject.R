@@ -45,12 +45,12 @@ readSpatialObject <- function(layer, cleanGeom = TRUE, verbose = TRUE){
   
   #download data
   out <- NULL
-  out <- tryCatch(suppressWarnings(readWFS(wfsRequest, verbose = verbose)),
+  out <- suppressWarnings(tryCatch(readWFS(wfsRequest, verbose = verbose),
                   error = function(err){
                     if(verbose){
                       logger.warn("Unknown or Empty filtered GIS web-resource")
                     }
-                  })
+                  }))
   if(!is.null(out)){
     if(cleanGeom){
       out <- clgeo_Clean(out)

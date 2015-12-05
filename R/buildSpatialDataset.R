@@ -72,13 +72,20 @@ buildSpatialDataset <- function(host, domain, cleanGeom = TRUE, verbose = TRUE,
                      return(out)
                    })
   out.sp <- out.sp[!sapply(out.sp, is.null)]
-  out.sp <- do.call("spRbind", out.sp)
+  
+  output.sp <- NULL
+  invisible(lapply(1:length(out.sp),function(i){
+       if(i==1){
+         output.sp <<- out.sp[[i]]
+       }else{
+         output.sp <<- spRbind(output.sp, out.sp[[i]])
+       }
+  }))
   
   #adding domain as attribute
-  if(!is.null(out.sp)){
-    out.sp@data <- cbind(DOMAIN = rep(domain,nrow(out.sp@data)),
-                        out.sp@data, stringsAsFactors = FALSE)
+  if(!is.null(output.sp)){
+    output.sp@data <- cbind(DOMAIN = rep(domain,nrow(output.sp@data)), output.sp@data, stringsAsFactors = FALSE)
   }
   
-  return(out.sp)
+  return(output.sp)
 }

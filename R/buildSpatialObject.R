@@ -21,6 +21,7 @@
 #'
 buildSpatialObject <- function(item, lang, host, domain, cleanGeom = TRUE, verbose = TRUE){
   
+  logger.info("----------------------------------------------------")
   logger.info(sprintf("Build spatial object for %s factsheet %s...", domain, item))
   
   fs <- fetchFactsheetInfo(item, lang, domain, host, verbose)
@@ -82,13 +83,17 @@ buildSpatialObject <- function(item, lang, host, domain, cleanGeom = TRUE, verbo
   sp.list <- sp.list[!sapply(sp.list, is.null)]
   
   #geospatial processing
-  if(verbose){
-    logger.info("Geoprocessing sequential intersection...")
-    logger.info(sprintf("Sequential intersection with %s (%s intersections)",length(sp.list), length(sp.list)-1))
-  }
   out.sp <- NULL
-  if(length(sp.list) == 1) out.sp <- gUnaryUnion(sp.list[[1]])
+  if(length(sp.list) == 1){
+    logger.info(sprintf("Grabing unique geographic reference for %s factsheet %s...",domain,item))
+    out.sp <- gUnaryUnion(sp.list[[1]])
+  }
   if(length(sp.list) > 1){
+    
+    if(verbose){
+      logger.info("Geoprocessing sequential intersection...")
+      logger.info(sprintf("Sequential intersection with %s (%s intersections)",length(sp.list), length(sp.list)-1))
+    }
     
     #performing intersection
     if(verbose){

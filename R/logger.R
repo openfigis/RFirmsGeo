@@ -2,6 +2,7 @@
 
 logger <- function(type, text){
   print(sprintf("[%s] %s", type, text))
+  return(NULL)
 }
 
 logger.info <- function(text){
