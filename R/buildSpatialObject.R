@@ -98,9 +98,10 @@ buildSpatialObject <- function(item, lang, host, domain, cleanGeom = TRUE, verbo
     int <- tryCatch(intersection(sp.list[[1]], sp.list[[2]]),
                     error = function(err){
                       if(verbose){
-                        logger.info("Intersection internal error. Skip intersection process")
+                        logger.error("Intersection internal error. Skip intersection process")
                       }
                     })
+    
     if(!is.null(int)){
       int <- clgeo_Clean(int)
     }
@@ -116,7 +117,7 @@ buildSpatialObject <- function(item, lang, host, domain, cleanGeom = TRUE, verbo
         tmpint <- tryCatch(intersection(int, sp.list[[i]]),
                         error = function(err){
                           if(verbose){
-                            logger.info("Intersection internal error. Skip intersection process")
+                            logger.error("Intersection internal error. Skip intersection process")
                           }
                           tmpint <<- NULL
                         })
