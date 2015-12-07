@@ -58,18 +58,38 @@ buildSpatialDataset <- function(host, domain, cleanGeom = TRUE, verbose = TRUE,
   
   out.sp <- lapply(1:nrow(refs),
                    function(x){
+                     out <- NULL
+                     out.points <- NULL
+                     
+                     #produce polygon dataset
                      out <- buildSpatialObject(refs[x,"factsheet"], refs[x,"lang"], host, domain,
                                                cleanGeom, verbose)
                      if(exportPartialResults){
                        if(!is.null(out)){
                          if(verbose){
-                           logger.info("Exporting to ESRI shapefile...")
+                           logger.info("Exporting polygon output to ESRI shapefile...")
                          }
                          filename <- paste0(domain, "_", refs[x,"factsheet"])
                          exportFeatures(out, file.path = exportPath, file.name = filename)
                        }
                      }
-                     return(out)
+                     
+                     #produce pointOnSurface dataset
+                     if(!is.null(out)){
+                      out.points <- gPointOnSurface(out, byid = TRUE)
+                      out.points <- SpatialPointsDataFrame(out.points, data = out@data, match.ID = TRUE)
+                      if(exportPartialResults){
+                        if(!is.null(out.points)){
+                          if(verbose){
+                            logger.info("Exporting point output to ESRI shapefile...")
+                          }
+                          filename <- paste0(domain, "_point_", refs[x,"factsheet"])
+                          exportFeatures(out, file.path = exportPath, file.name = filename)
+                        }
+                      }
+                     }
+                     
+                     return(out.points)
                    })
   out.sp <- out.sp[!sapply(out.sp, is.null)]
   

@@ -156,13 +156,23 @@ buildSpatialObject <- function(item, lang, host, domain, cleanGeom = TRUE, verbo
   if(!is.null(out.sp)){
     out.sp <- spChFIDs(out.sp, FigisID)
     areaCRS <- CRS("+proj=eck4 +lon_0=Central Meridian +x_0=False Easting +y_0=False Northing")
+    pout.sp <- NULL
+    pout.sp <- tryCatch(spTransform(out.sp, areaCRS),
+                        error = function(err){
+                          if(verbose){
+                            logger.error("Error in calculating the projected area.")
+                          }
+                          pout.sp <<- NULL
+                        })
+    parea <- NA
+    if(!is.null(pout.sp)) parea <- gArea(pout.sp)
     out.df <- data.frame(
       FIGIS_ID = FigisID,
       LANG = lang,
       TITLE = title,
       GEOREF = georef$title,
       SCALE = georef$scale,
-      SURFACE = gArea(spTransform(out.sp, areaCRS)),
+      SURFACE = parea,
       stringsAsFactors = FALSE)
     row.names(out.df) <- out.df$FIGIS_ID
     out.sp <- SpatialPolygonsDataFrame(Sr = out.sp, data = out.df, match.ID = TRUE)
