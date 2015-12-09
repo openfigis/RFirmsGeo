@@ -205,7 +205,12 @@ fetchFactsheetInfo <- function(factsheet, lang, domain, host, verbose = TRUE){
   }else{
     fsXML <- content(req)
     
-    titleXML <- getNodeSet(fsXML, "//ns:Title", c(ns = dcNS))
+    xpathIdent <- switch(domain,  	
+                        "resource" = "AqResIdent",		
+                        "fishery" = "FisheryIdent",		
+                        NULL)
+    
+    titleXML <- getNodeSet(fsXML, sprintf("//fi:%s/dc:Title",xpathIdent), c(fi = fiNS, dc = dcNS))
     isValidFactsheetXML <- length(titleXML) > 0
     if(isValidFactsheetXML) {
       

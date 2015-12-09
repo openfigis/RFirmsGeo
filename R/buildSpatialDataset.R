@@ -84,7 +84,7 @@ buildSpatialDataset <- function(host, domain, cleanGeom = TRUE, verbose = TRUE,
                             logger.info("Exporting point output to ESRI shapefile...")
                           }
                           filename <- paste0(domain, "_point_", refs[x,"factsheet"])
-                          exportFeatures(out, file.path = exportPath, file.name = filename)
+                          exportFeatures(out.points, file.path = exportPath, file.name = filename)
                         }
                       }
                      }
