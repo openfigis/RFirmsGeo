@@ -5,7 +5,7 @@
 \title{buildSpatialObject}
 \usage{
 buildSpatialObject(item, lang, host, domain, cleanGeom = TRUE,
-  verbose = TRUE)
+  unionStrategy = "bbox", verbose = TRUE)
 }
 \arguments{
 \item{item}{an object of class "character" giving the factsheet id}
@@ -18,6 +18,11 @@ buildSpatialObject(item, lang, host, domain, cleanGeom = TRUE,
 
 \item{cleanGeom}{an object of class "logical" indicating if geometries have to
 be validated with \pkg{cleangeo}. Default value is TRUE.}
+
+\item{unionStrategy}{an object of class "character". Accepted values are "union"
+(pure geoprocessing union - time consuming -), "bbox" (strategy to estimate the
+largest spatial object to retain, by comparing envelopes, and results much less
+time consuming). Default value is "bbox".}
 
 \item{verbose}{an object of class "logical" either logs have to be printed out.
 Default value is TRUE.}

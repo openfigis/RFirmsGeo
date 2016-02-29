@@ -9,6 +9,10 @@
 #' @param domain an object of class "character" giving the FIRMS domain
 #' @param cleanGeom an object of class "logical" indicating if geometries have to
 #'        be validated with \pkg{cleangeo}. Default value is TRUE.
+#' @param unionStrategy an object of class "character". Accepted values are "union"
+#' (pure geoprocessing union - time consuming -), "bbox" (strategy to estimate the
+#' largest spatial object to retain, by comparing envelopes, and results much less
+#' time consuming). Default value is "bbox".
 #' @param verbose an object of class "logical" either logs have to be printed out.
 #'        Default value is TRUE.
 #' @param ids a vector of resource IDs for which the computation has to be run
@@ -21,9 +25,10 @@
 #' 
 #' @author Emmanuel Blondel, \email{emmanuel.blondel1@@gmail.com}
 #'
-buildSpatialDataset <- function(host, domain, cleanGeom = TRUE, verbose = TRUE,
-                                ids = NULL, exportPartialResults = FALSE,
-                                exportPath = getwd()){
+buildSpatialDataset <- function(host, domain,
+                                cleanGeom = TRUE, unionStrategy = "bbox",
+                                verbose = TRUE, ids = NULL,
+                                exportPartialResults = FALSE, exportPath = getwd()){
   
   if(!(host %in% c("http://figisapps.fao.org", "http://www.fao.org")))
     stop("Unknown FAO host")
@@ -63,7 +68,7 @@ buildSpatialDataset <- function(host, domain, cleanGeom = TRUE, verbose = TRUE,
                      
                      #produce polygon dataset
                      out <- buildSpatialObject(refs[x,"factsheet"], refs[x,"lang"], host, domain,
-                                               cleanGeom, verbose)
+                                               cleanGeom, unionStrategy, verbose)
                      if(exportPartialResults){
                        if(!is.null(out)){
                          if(verbose){
@@ -101,11 +106,6 @@ buildSpatialDataset <- function(host, domain, cleanGeom = TRUE, verbose = TRUE,
          output.sp <<- spRbind(output.sp, out.sp[[i]])
        }
   }))
-  
-  #adding domain as attribute
-  if(!is.null(output.sp)){
-    output.sp@data <- cbind(DOMAIN = rep(domain,nrow(output.sp@data)), output.sp@data, stringsAsFactors = FALSE)
-  }
   
   return(output.sp)
 }
