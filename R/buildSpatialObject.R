@@ -101,7 +101,6 @@ buildSpatialObject <- function(item, lang, host, domain,
         if(i == 1){
           spRef <- species.sp.list[[1]]
           spRef.env <- gEnvelope(spRef)
-          plot(spRef.env)
         }
         nextsp <- species.sp.list[[i+1]]
         nextsp.env <- gEnvelope(nextsp)
