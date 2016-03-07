@@ -5,7 +5,7 @@ import(maptools)
 import(RFigisGeo)
 import(cleangeo)
 import(XML)
-import(httr)
+import(RCurl)
 
 export(buildGISLayerInfo)
 export(buildSpatialDataset)

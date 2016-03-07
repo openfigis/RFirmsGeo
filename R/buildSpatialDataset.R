@@ -39,9 +39,8 @@ buildSpatialDataset <- function(host, domain,
   #list of items/lang per domain
   domainUrl <- sprintf("%s/figis/ws/factsheets/domain/%s/factsheet", host, domain)
   logger.info(paste0("GET ", domainUrl))
-  req <- GET(domainUrl)
-  stop_for_status(req)
-  domainXml <- content(req)
+  reqText <- getURL(domainUrl)
+  domainXml <- xmlParse(reqText)
   items <- sapply(getNodeSet(domainXml, "//fiws:FactsheetDiscriminator"),
                   xmlGetAttr, "factsheet")
   lang <- sapply(getNodeSet(domainXml, "//fiws:FactsheetDiscriminator"),

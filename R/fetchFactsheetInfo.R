@@ -261,13 +261,17 @@ fetchFactsheetInfo <- function(factsheet, lang, domain, host, verbose = TRUE){
   
   fsUrl <- sprintf("%s/figis/ws/factsheets/domain/%s/factsheet/%s/language/%s", host, domain, factsheet, lang)
   logger.info(paste0("GET ", fsUrl))
-  req <- GET(fsUrl)
   out <- NULL
-  if(http_status(req)$category != "success") {
+  fsXML <- tryCatch({
+    reqText <- getURL(fsUrl)
+    Encoding(reqText) <- "UTF-8"
+    fsXML <- xmlParse(reqText)
+  },error = function(err){
     logger.info(sprintf("Factsheet %s does not exist", factsheet))
-  }else{
-    fsXML <- content(req)
-    
+    return(NULL)
+  })
+  if(!is.null(fsXML)){
+  
     xpathIdent <- switch(domain,  	
                         "resource" = "AqResIdent",		
                         "fishery" = "FisheryIdent",		

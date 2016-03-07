@@ -217,6 +217,10 @@ buildSpatialObject <- function(item, lang, host, domain,
       SCALE = georef$scale,
       SURFACE = parea,
       stringsAsFactors = FALSE)
+    for(column in colnames(out.df)){
+      if(class(out.df[,column]) == "character") Encoding(out.df[,column]) <- "UTF-8"
+    }
+    
     row.names(out.df) <- out.df$FIGIS_ID
     out.sp <- SpatialPolygonsDataFrame(Sr = out.sp, data = out.df, match.ID = TRUE)
   }
