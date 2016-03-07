@@ -4,7 +4,9 @@
 #' 
 #' @description
 #' A function to fetch the water area information from the \code{waterAreaRef} 
-#' node of a factsheet XML. Intersecting areas are excluded.
+#' node of a factsheet XML. In case there is no waterAreaRef, the function will
+#' attempt to fetch the content from \code{landAreaRef} node of the factsheet XML.
+#' Intersecting areas are excluded.
 #'
 #' @param xml an object of class "XmlInternalDocument"
 #' @return an object of class "data.frame" listing the GIS water area layer infos
@@ -48,10 +50,38 @@ fetchFactsheetAreaInfo <- function(xml){
                                  }))
       waterAreaList <- rbind(filtered, waterAreaList[is.na(waterAreaList$rank),])
     }
+  }else{
+    #look into land areas
+    landAreaRefXML <- getNodeSet(xml, "//ns:LandAreaList/ns:LandAreaRef", c(ns = fiNS))
+    landAreaList = as.data.frame(
+      do.call("rbind",
+              lapply(landAreaRefXML,
+                     function(x){
+                       out <- NULL
+                       foreignIdXML <- getNodeSet(xmlDoc(x), "//ns:ForeignID", c(ns = fiNS))
+                       if(length(foreignIdXML) > 0){
+                         for(i in 1:length(foreignIdXML)){                         
+                          if(xmlGetAttr(foreignIdXML[[i]], "CodeSystem") == "iso3"){
+                            foreignIdXML = foreignIdXML[[i]]
+                            break
+                          }
+                         } 
+                         out <- buildGISLayerInfo("LandArea",xmlGetAttr(foreignIdXML, "CodeSystem"), xmlGetAttr(foreignIdXML, "Code"))
+                       }
+                       return(out)
+                     })),
+      stringsAsFactors = FALSE
+    )
+    
+    if(nrow(landAreaList) > 0){
+      landAreaList <- unique(landAreaList)
+      waterAreaList <- landAreaList
+    }
   }
   
   return(waterAreaList)
 }
+
 
 #' @name fetchFactsheetSpeciesInfo
 #' @aliases fetchFactsheetSpeciesInfo
@@ -94,6 +124,39 @@ fetchFactsheetSpeciesInfo <- function(xml, domain){
   )
   
   return(speciesList)
+}
+
+
+#' @name fetchFactsheetThematicApproachInfo
+#' @aliases fetchFactsheetThematicApproachInfo
+#' @title fetchFactsheetThematicApproachInfo
+#' 
+#' @description
+#' A function to fetch the thematic approach information from the \code{ThematicApproach} 
+#' node of a factsheet XML.
+#'
+#' @param xml an object of class "XmlInternalDocument"
+#' @param domain an object of class "character representing the FIRMS resource
+#' @return an object of class "list"
+#' 
+#' @note function used internally to build FIRMS spatial objects
+#' 
+#' @author Emmanuel Blondel, \email{emmanuel.blondel1@@gmail.com}
+#'
+fetchFactsheetThematicApproachInfo <- function(xml, domain){
+  
+  approach<- as.character(NA)
+  
+  fiNS <- "http://www.fao.org/fi/figis/devcon/"
+  dcNS <- "http://purl.org/dc/elements/1.1/"
+  
+  appXML <- getNodeSet(xml, paste0("//fi:ThematicApproach"), c(fi = fiNS))
+  if(length(appXML) > 0){
+    appXML <- appXML[[1]]
+    approach <- xmlGetAttr(appXML,"Value")
+  }
+
+  return(approach)
 }
 
 #' @name fetchFactsheetGeorefInfo
@@ -220,6 +283,9 @@ fetchFactsheetInfo <- function(factsheet, lang, domain, host, verbose = TRUE){
       #georeference title
       georef <- fetchFactsheetGeorefInfo(fsXML, domain)
       
+      #thematic approach
+      approach <- fetchFactsheetThematicApproachInfo(fsXML)
+      
       #water references
       waterAreaList <- fetchFactsheetAreaInfo(fsXML)
       speciesList <- fetchFactsheetSpeciesInfo(fsXML, domain)
@@ -241,7 +307,8 @@ fetchFactsheetInfo <- function(factsheet, lang, domain, host, verbose = TRUE){
       out <- list(
         title = title,
         georef = georef,
-        waterRefs = waterRefs
+        waterRefs = waterRefs,
+        approach = approach
       )
      
     }

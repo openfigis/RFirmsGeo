@@ -124,6 +124,17 @@ buildGISLayerInfo <- function(category, codesystem, code){
       rank = NA,
       weight = 10)
   
+  #8. land areas (for the timebeing refer to corresponding EEZ)
+  }else if(codesystem == "iso3"){
+    layer <- list(
+      url = gsUrl,
+      typeName = "fifao:NJA",
+      propertyName = "ISO3",
+      propertyValue = code,
+      level = infoLevel,
+      rank = NA,
+      weight = 10)
+    
   #other layers (water area refs)
   }else{
     layer <- list(

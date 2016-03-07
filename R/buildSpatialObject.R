@@ -38,8 +38,13 @@ buildSpatialObject <- function(item, lang, host, domain,
       return(NULL)
     }else{
       categories <- unique(fs$waterRefs$category)
-      if(length(categories) == 1 && categories[1] == "SpeciesDistribution"){
-        logger.warn(sprintf("No WaterAreaRef for %s factsheet %s...", domain, item))
+      if(length(categories) == 1){
+        if(categories[1] != "WaterArea"){
+          logger.warn(sprintf("No WaterAreaRef for %s factsheet %s...", domain, item))
+        }
+        if(categories[1] == "LandArea"){
+          logger.warn(sprintf("Presence of LandAreaArea for %s factsheet %s...", domain, item))
+        }
       }
     }
   }else{
@@ -50,12 +55,13 @@ buildSpatialObject <- function(item, lang, host, domain,
   title <- fs$title
   georef <- fs$georef
   items <- fs$waterRefs
+  approach <- fs$approach
     
   #figisID
   FigisID <- unique(items$FigisID)
   
   #collect list of Spatial objects for water areas
-  waterareas <- items[items$category == "WaterArea",]
+  waterareas <- items[items$category %in% c("WaterArea","LandArea"),]
   area.sp.list <- readSpatialObjects(waterareas, cleanGeom, verbose)
   
   #collect andlist of spatial objects for species distributions
@@ -204,6 +210,7 @@ buildSpatialObject <- function(item, lang, host, domain,
     if(!is.null(pout.sp)) parea <- gArea(pout.sp)
     out.df <- data.frame(
       DOMAIN = domain,
+      APPROACH = approach,
       FIGIS_ID = FigisID,
       LANG = lang,
       TITLE = title,
