@@ -1,7 +1,7 @@
 #basic logger facility
 
 logger <- function(type, text){
-  cat(sprintf("[RFirmsGeo][%s] %s", type, text))
+  cat(sprintf("[RFirmsGeo][%s] %s \n", type, text))
 }
 
 logger.info <- function(text){

@@ -11,6 +11,7 @@
 #' @param domain an object of class "character" giving the FIRMS domain
 #' @param cleanGeom an object of class "logical" indicating if geometries have to
 #'        be validated with \pkg{cleangeo}. Default value is TRUE.
+#' @param cleanStrategy an object of class "character". Default is "BUFFER"
 #' @param unionStrategy an object of class "character". Accepted values are "union"
 #' (pure geoprocessing union - time consuming -), "bbox" (strategy to estimate the
 #' largest spatial object to retain, by comparing envelopes, and results much less
@@ -24,7 +25,8 @@
 #' @author Emmanuel Blondel, \email{emmanuel.blondel1@@gmail.com}
 #'
 buildSpatialObject <- function(item, lang, host, domain,
-                               cleanGeom = TRUE, unionStrategy = "bbox",
+                               cleanGeom = TRUE, cleanStrategy = "BUFFER",
+                               unionStrategy = "bbox",
                                verbose = TRUE){
   
   logger.info("----------------------------------------------------")
@@ -84,7 +86,7 @@ buildSpatialObject <- function(item, lang, host, domain,
           spUnion <- species.sp.list[[i]]
         }else{
           spUnion <- gUnion(spUnion, species.sp.list[[i]])
-          spUnion <- clgeo_Clean(spUnion) 
+          spUnion <- clgeo_Clean(spUnion, strategy = cleanStrategy) 
         }
       }
       spUnionId <- paste(species$typeName, collapse="_union_")
@@ -145,7 +147,7 @@ buildSpatialObject <- function(item, lang, host, domain,
                       })
       
       if(!is.null(int)){
-        int <- clgeo_Clean(int)
+        int <- clgeo_Clean(int, strategy = cleanStrategy)
       }
     }
     #subsequent intersections
@@ -171,7 +173,7 @@ buildSpatialObject <- function(item, lang, host, domain,
           }
         }
         if(!is.null(int)){
-          cleanint <- clgeo_Clean(int)
+          cleanint <- clgeo_Clean(int, strategy = cleanStrategy)
           int <- cleanint
         }else{
           break;
@@ -189,7 +191,7 @@ buildSpatialObject <- function(item, lang, host, domain,
       out.sp <- sp.list[[1]] #to discuss this rule
     }
     out.sp <- gUnaryUnion(out.sp)
-    out.sp <- clgeo_Clean(out.sp)
+    out.sp <- clgeo_Clean(out.sp, strategy = cleanStrategy)
     
   }
   

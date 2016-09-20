@@ -4,9 +4,9 @@
 \alias{buildSpatialDataset}
 \title{buildSpatialDataset}
 \usage{
-buildSpatialDataset(host, domain, cleanGeom = TRUE, unionStrategy = "bbox",
-  verbose = TRUE, ids = NULL, exportPartialResults = FALSE,
-  exportPath = getwd())
+buildSpatialDataset(host, domain, cleanGeom = TRUE,
+  cleanStrategy = "BUFFER", unionStrategy = "bbox", verbose = TRUE,
+  ids = NULL, exportPartialResults = FALSE, exportPath = getwd())
 }
 \arguments{
 \item{host}{an object of class "character" giving the host}
@@ -15,6 +15,8 @@ buildSpatialDataset(host, domain, cleanGeom = TRUE, unionStrategy = "bbox",
 
 \item{cleanGeom}{an object of class "logical" indicating if geometries have to
 be validated with \pkg{cleangeo}. Default value is TRUE.}
+
+\item{cleanStrategy}{an object of class "character". Default is 'BUFFER'}
 
 \item{unionStrategy}{an object of class "character". Accepted values are "union"
 (pure geoprocessing union - time consuming -), "bbox" (strategy to estimate the

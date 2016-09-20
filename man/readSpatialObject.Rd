@@ -4,7 +4,8 @@
 \alias{readSpatialObject}
 \title{readSpatialObject}
 \usage{
-readSpatialObject(layer, cleanGeom = TRUE, verbose = TRUE)
+readSpatialObject(layer, cleanGeom = TRUE, cleanStrategy = "BUFFER",
+  verbose = TRUE)
 }
 \arguments{
 \item{layer}{an object of class "data.frame" (single record) giving information
@@ -12,6 +13,8 @@ about a GIS web-layer to query}
 
 \item{cleanGeom}{an object of class "logical" indicating if geometries have to
 be validated with \pkg{cleangeo}. Default value is TRUE.}
+
+\item{cleanStrategy}{an object of class "character". Default value is "BUFFER"}
 
 \item{verbose}{an object of class "logical" either logs have to be printed out.
 Default value is TRUE.}

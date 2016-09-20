@@ -9,6 +9,7 @@
 #' @param domain an object of class "character" giving the FIRMS domain
 #' @param cleanGeom an object of class "logical" indicating if geometries have to
 #'        be validated with \pkg{cleangeo}. Default value is TRUE.
+#' @param cleanStrategy an object of class "character". Default is 'BUFFER'
 #' @param unionStrategy an object of class "character". Accepted values are "union"
 #' (pure geoprocessing union - time consuming -), "bbox" (strategy to estimate the
 #' largest spatial object to retain, by comparing envelopes, and results much less
@@ -26,7 +27,8 @@
 #' @author Emmanuel Blondel, \email{emmanuel.blondel1@@gmail.com}
 #'
 buildSpatialDataset <- function(host, domain,
-                                cleanGeom = TRUE, unionStrategy = "bbox",
+                                cleanGeom = TRUE, cleanStrategy = "BUFFER",
+                                unionStrategy = "bbox",
                                 verbose = TRUE, ids = NULL,
                                 exportPartialResults = FALSE, exportPath = getwd()){
   
@@ -67,7 +69,7 @@ buildSpatialDataset <- function(host, domain,
                      
                      #produce polygon dataset
                      out <- buildSpatialObject(refs[x,"factsheet"], refs[x,"lang"], host, domain,
-                                               cleanGeom, unionStrategy, verbose)
+                                               cleanGeom, cleanStrategy, unionStrategy, verbose)
                      if(exportPartialResults){
                        if(!is.null(out)){
                          if(verbose){

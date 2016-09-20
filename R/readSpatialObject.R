@@ -9,6 +9,7 @@
 #'        about a GIS web-layer to query
 #' @param cleanGeom an object of class "logical" indicating if geometries have to
 #'        be validated with \pkg{cleangeo}. Default value is TRUE.
+#' @param cleanStrategy an object of class "character". Default value is "BUFFER"
 #' @param verbose an object of class "logical" either logs have to be printed out.
 #'        Default value is TRUE.
 #' @return an object of class "spatial" giving the spatial object
@@ -17,7 +18,7 @@
 #' 
 #' @author Emmanuel Blondel, \email{emmanuel.blondel1@@gmail.com}
 #'
-readSpatialObject <- function(layer, cleanGeom = TRUE, verbose = TRUE){
+readSpatialObject <- function(layer, cleanGeom = TRUE, cleanStrategy = "BUFFER", verbose = TRUE){
   
   #base request
   host <- unique(layer$url)
@@ -53,7 +54,7 @@ readSpatialObject <- function(layer, cleanGeom = TRUE, verbose = TRUE){
                   }))
   if(!is.null(out)){
     if(cleanGeom){
-      out <- clgeo_Clean(out)
+      out <- clgeo_Clean(out, strategy = cleanStrategy)
     }
   }
   return(out)
