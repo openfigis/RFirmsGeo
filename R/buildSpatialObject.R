@@ -64,11 +64,11 @@ buildSpatialObject <- function(item, lang, host, domain,
   
   #collect list of Spatial objects for water areas
   waterareas <- items[items$category %in% c("WaterArea","LandArea"),]
-  area.sp.list <- readSpatialObjects(waterareas, cleanGeom, verbose)
+  area.sp.list <- readSpatialObjects(waterareas, cleanGeom, cleanStrategy, verbose)
   
   #collect andlist of spatial objects for species distributions
   species <- items[items$category == "SpeciesDistribution",]
-  species.sp.list <- readSpatialObjects(species, cleanGeom, verbose)
+  species.sp.list <- readSpatialObjects(species, cleanGeom, cleanStrategy, verbose)
   
   #apply union strategy with species distributions (if more than one)
   if(length(species.sp.list) > 1){

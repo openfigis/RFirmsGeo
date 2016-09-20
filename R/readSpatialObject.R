@@ -71,6 +71,7 @@ readSpatialObject <- function(layer, cleanGeom = TRUE, cleanStrategy = "BUFFER",
 #'        about a GIS web-layer to query
 #' @param cleanGeom an object of class "logical" indicating if geometries have to
 #'        be validated with \pkg{cleangeo}. Default value is TRUE.
+#' @param cleanStrategy an object of class "character". Default value is "BUFFER"
 #' @param verbose an object of class "logical" either logs have to be printed out.
 #'        Default value is TRUE.
 #' @return an object of class "list" listing the spatial objects
@@ -79,11 +80,11 @@ readSpatialObject <- function(layer, cleanGeom = TRUE, cleanStrategy = "BUFFER",
 #' 
 #' @author Emmanuel Blondel, \email{emmanuel.blondel1@@gmail.com}
 #'
-readSpatialObjects <- function(layers, cleanGeom, verbose){
+readSpatialObjects <- function(layers, cleanGeom = TRUE, cleanStrategy = TRUE, verbose = TRUE){
   logger.info("Read spatial objects...")
   sp.layers <- lapply(unique(layers$typeName), function(x){
     geoitem <- layers[layers$typeName == x,]
-    sp <- readSpatialObject(geoitem, cleanGeom, verbose)
+    sp <- readSpatialObject(geoitem, cleanGeom, cleanStrategy, verbose)
     return(sp)
   })
   sp.layers <- sp.layers[!sapply(sp.layers, is.null)]
