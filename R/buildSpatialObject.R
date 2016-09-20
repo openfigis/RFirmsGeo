@@ -55,7 +55,7 @@ buildSpatialObject <- function(item, lang, host, domain,
   title <- fs$title
   georef <- fs$georef
   items <- fs$waterRefs
-  approach <- fs$approach
+  category <- fs$category
     
   #figisID
   FigisID <- unique(items$FigisID)
@@ -209,7 +209,7 @@ buildSpatialObject <- function(item, lang, host, domain,
     if(!is.null(pout.sp)) parea <- gArea(pout.sp)
     out.df <- data.frame(
       DOMAIN = domain,
-      APPROACH = approach,
+      CATEGORY = category,
       FIGIS_ID = FigisID,
       LANG = lang,
       TITLE = title,

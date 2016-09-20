@@ -136,14 +136,13 @@ fetchFactsheetSpeciesInfo <- function(xml, domain){
 #' node of a factsheet XML.
 #'
 #' @param xml an object of class "XmlInternalDocument"
-#' @param domain an object of class "character representing the FIRMS resource
 #' @return an object of class "list"
 #' 
 #' @note function used internally to build FIRMS spatial objects
 #' 
 #' @author Emmanuel Blondel, \email{emmanuel.blondel1@@gmail.com}
 #'
-fetchFactsheetThematicApproachInfo <- function(xml, domain){
+fetchFactsheetThematicApproachInfo <- function(xml){
   
   approach<- as.character(NA)
   
@@ -158,6 +157,44 @@ fetchFactsheetThematicApproachInfo <- function(xml, domain){
 
   return(approach)
 }
+
+
+#' @name fetchFactsheetBiologicalStockInfo
+#' @aliases fetchFactsheetBiologicalStockInfo
+#' @title fetchFactsheetBiologicalStockInfo
+#' 
+#' @description
+#' A function to fetch the stock information from the \code{AqResStruct} 
+#' node / \code{BiologicalStock} attribute of a factsheet XML.
+#'
+#' @param xml an object of class "XmlInternalDocument"
+#' @return an object of class "list"
+#' 
+#' @note function used internally to build FIRMS spatial objects
+#' 
+#' @author Emmanuel Blondel, \email{emmanuel.blondel1@@gmail.com}
+#'
+fetchFactsheetStockInfo <- function(xml){
+  
+  stock<- as.character(NA)
+  
+  fiNS <- "http://www.fao.org/fi/figis/devcon/"
+  dcNS <- "http://purl.org/dc/elements/1.1/"
+  
+  appXML <- getNodeSet(xml, paste0("//fi:AqResStruct"), c(fi = fiNS))
+  if(length(appXML) > 0){
+    appXML <- appXML[[1]]
+    stock <- xmlGetAttr(appXML,"Biological Stock")
+    if(stock == "false"){
+      stock <- NA
+    }else{
+      stock <- "BiologicalStock"
+    }
+  }
+  
+  return(stock)
+}
+
 
 #' @name fetchFactsheetGeorefInfo
 #' @aliases fetchFactsheetGeorefInfo
@@ -288,7 +325,11 @@ fetchFactsheetInfo <- function(factsheet, lang, domain, host, verbose = TRUE){
       georef <- fetchFactsheetGeorefInfo(fsXML, domain)
       
       #thematic approach
-      approach <- fetchFactsheetThematicApproachInfo(fsXML)
+      category <- switch(domain,
+             "fishery" = fetchFactsheetThematicApproachInfo(fsXML),
+             "resource"= fetchFactsheetStockInfo(fsXML),
+             NA
+      )
       
       #water references
       waterAreaList <- fetchFactsheetAreaInfo(fsXML)
@@ -312,7 +353,7 @@ fetchFactsheetInfo <- function(factsheet, lang, domain, host, verbose = TRUE){
         title = title,
         georef = georef,
         waterRefs = waterRefs,
-        approach = approach
+        category = category
       )
      
     }
