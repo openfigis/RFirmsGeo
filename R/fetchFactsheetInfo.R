@@ -184,11 +184,11 @@ fetchFactsheetStockInfo <- function(xml){
   appXML <- getNodeSet(xml, paste0("//fi:AqResStruct"), c(fi = fiNS))
   if(length(appXML) > 0){
     appXML <- appXML[[1]]
-    stock <- xmlGetAttr(appXML,"Biological Stock")
+    stock <- xmlGetAttr(appXML,"BiologicalStock")
     if(stock == "false"){
-      stock <- NA
-    }else{
-      stock <- "BiologicalStock"
+      stock <- "Marine Resource"
+    }else if(stock == "true"){
+      stock <- "Biological Stock"
     }
   }
   
