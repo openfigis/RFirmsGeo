@@ -11,7 +11,7 @@ fetchFactsheetStockInfo(xml)
 \item{xml}{an object of class "XmlInternalDocument"}
 }
 \value{
-an object of class "list"
+an object of class "character"
 }
 \description{
 A function to fetch the stock information from the \code{AqResStruct}
