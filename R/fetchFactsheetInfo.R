@@ -168,7 +168,7 @@ fetchFactsheetThematicApproachInfo <- function(xml){
 #' node / \code{BiologicalStock} attribute of a factsheet XML.
 #'
 #' @param xml an object of class "XmlInternalDocument"
-#' @return an object of class "list"
+#' @return an object of class "character"
 #' 
 #' @note function used internally to build FIRMS spatial objects
 #' 
@@ -268,6 +268,29 @@ fetchFactsheetIndicatorInfo <- function(xml, indicator){
   return(ind)
 }
 
+#' @name fetchFactsheetAgencyInfo
+#' @aliases fetchFactsheetAgencyInfo
+#' @title fetchFactsheetAgencyInfo
+#' 
+#' @description
+#' A function to fetch the owner acronym from the factsheet XML
+#'
+#' @param xml an object of class "XmlInternalDocument"
+#' @return an object of class "character"
+#' 
+#' @note function used internally to build FIRMS spatial objects
+#' 
+#' @author Emmanuel Blondel, \email{emmanuel.blondel1@@gmail.com}
+#'
+fetchFactsheetAgencyInfo <- function(xml){
+  fiNS <- "http://www.fao.org/fi/figis/devcon/"
+  orgXML <- getNodeSet(xml, "//ns:Owner/ns:CollectionRef/ns:OrgRef[contains(@Role,'Executing_agency')]/ns:ForeignID", c(ns = fiNS))
+  org <- NULL
+  if(length(orgXML) > 0){
+    org <- xmlGetAttr(orgXML[[1]], "Code")
+  }
+  return(org)
+}
 
 #' @name fetchFactsheetInfo
 #' @aliases fetchFactsheetInfo
@@ -349,11 +372,15 @@ fetchFactsheetInfo <- function(factsheet, lang, domain, host, verbose = TRUE){
         }
       }
       
+      #owner agency
+      agency <- fetchFactsheetAgencyInfo(fsXML)
+      
       out <- list(
         title = title,
         georef = georef,
         waterRefs = waterRefs,
-        category = category
+        category = category,
+        agency = agency
       )
      
     }

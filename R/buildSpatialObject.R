@@ -58,6 +58,7 @@ buildSpatialObject <- function(item, lang, host, domain,
   georef <- fs$georef
   items <- fs$waterRefs
   category <- fs$category
+  agency <- fs$agency
     
   #figisID
   FigisID <- unique(items$FigisID)
@@ -217,6 +218,7 @@ buildSpatialObject <- function(item, lang, host, domain,
       TITLE = title,
       GEOREF = georef$title,
       SCALE = georef$scale,
+      AGENCY = agency,
       SURFACE = parea,
       stringsAsFactors = FALSE)
     for(column in colnames(out.df)){
