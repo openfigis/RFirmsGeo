@@ -51,7 +51,7 @@ buildGISLayerInfo <- function(category, codesystem, code){
                        "fao_div","fao_sub_div","fao_sub_unit")){
     layer <- list(
       url = gsUrl,
-      typeName = "fifao:FAO_AREAS_ERASE",
+      typeName = "fifao:FAO_AREAS",
       propertyName = "F_CODE",
       propertyValue = code,
       level = infoLevel,

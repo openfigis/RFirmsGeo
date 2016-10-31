@@ -285,7 +285,7 @@ fetchFactsheetIndicatorInfo <- function(xml, indicator){
 fetchFactsheetAgencyInfo <- function(xml){
   fiNS <- "http://www.fao.org/fi/figis/devcon/"
   orgXML <- getNodeSet(xml, "//ns:Owner/ns:CollectionRef/ns:OrgRef[contains(@Role,'Executing_agency')]/ns:ForeignID", c(ns = fiNS))
-  org <- NULL
+  org <- as.character(NA)
   if(length(orgXML) > 0){
     org <- xmlGetAttr(orgXML[[1]], "Code")
   }
