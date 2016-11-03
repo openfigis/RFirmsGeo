@@ -319,6 +319,15 @@ fetchFactsheetAgencyInfo <- function(xml){
     }
   }
 
+  #attempt to set FAO as org in case of UN FAO branch as implementing agency
+  #(assumption is made that when a factsheet as an "implementing agency" it is within FAO)
+  if(is.na(org)){
+    branch <- NULL
+    branchXML <- getNodeSet(xml, "//ns:Owner/ns:CollectionRef/ns:OrgRef[contains(@Role,'Implementing_agency')]/ns:ForeignID", c(ns = fiNS))
+    if(length(branchXML) > 0) branch <- xmlGetAttr(branchXML[[1]], "Code")
+    if(!is.null(branch)) org <- "FAO"
+  }
+  
   return(org)
 }
 
