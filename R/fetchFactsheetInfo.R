@@ -273,7 +273,9 @@ fetchFactsheetIndicatorInfo <- function(xml, indicator){
 #' @title fetchFactsheetAgencyInfo
 #' 
 #' @description
-#' A function to fetch the owner acronym from the factsheet XML
+#' A function to fetch the owner acronym from the factsheet XML. The function
+#' tries to grab the acronym of the executing agency. In case the latter is 'FAO',
+#' it will try to fetch the corresponding FAO body.
 #'
 #' @param xml an object of class "XmlInternalDocument"
 #' @return an object of class "character"
@@ -289,6 +291,34 @@ fetchFactsheetAgencyInfo <- function(xml){
   if(length(orgXML) > 0){
     org <- xmlGetAttr(orgXML[[1]], "Code")
   }
+  
+  #in case of FAO, try to inherit FAO body / project
+  #-------------------------------------------------
+  bodies <- c("CCAMLR","CCSBT","CECAF","GFCM","IATTC","ICCAT","ICES","IOTC","NAFO","SEAFO","SWIOFC","WECAFC", "RECOFI", "BNP")
+  #attempt with CreatorCorporate tag
+  if(is.na(org) || org == "FAO") {
+    agsNS <- "http://www.purl.org/agmes/1.1/"
+    corpXML <- getNodeSet(xml, "//ns1:CorporateCoverPage/ns2:CreatorCorporate", c(ns1 = fiNS, ns2 = agsNS))
+    if(length(corpXML)>0) {
+      creatorTitle <- xmlValue(corpXML[[1]])
+      creator <- NULL
+      invisible(lapply(bodies,function(x) {if(regexpr(x,creatorTitle)>0) creator <<- x}))
+      if(!is.null(creator)) org <- creator
+    }
+  }
+  
+  #attempt with dc:Identifier
+  if(is.na(org) || org == "FAO") {
+    dcNS <- "http://purl.org/dc/elements/1.1/"
+    idXML <-  getNodeSet(xml, "//ns1:CorporateCoverPage/ns2:Identifier", c(ns1 = fiNS, ns2 = dcNS))
+    if(length(idXML)>0) {
+      creatorIdentifier <- xmlValue(idXML[[1]])
+      creator <- NULL
+      invisible(lapply(bodies,function(x) {if(regexpr(x,creatorIdentifier)>0) creator <<- x}))
+      if(!is.null(creator)) org <- creator
+    }
+  }
+
   return(org)
 }
 
