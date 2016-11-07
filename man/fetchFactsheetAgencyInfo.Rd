@@ -13,7 +13,9 @@ fetchFactsheetAgencyInfo(xml)
 an object of class "character"
 }
 \description{
-A function to fetch the owner acronym from the factsheet XML
+A function to fetch the owner acronym from the factsheet XML. The function
+tries to grab the acronym of the executing agency. In case the latter is 'FAO',
+it will try to fetch the corresponding FAO body.
 }
 \note{
 function used internally to build FIRMS spatial objects

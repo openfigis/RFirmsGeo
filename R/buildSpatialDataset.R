@@ -17,6 +17,8 @@
 #' @param verbose an object of class "logical" either logs have to be printed out.
 #'        Default value is TRUE.
 #' @param ids a vector of resource IDs for which the computation has to be run
+#' @param runParallel To run code with parallel R interface. Default is FALSE
+#' @param runCores Number of cores to use when parallel = TRUE.
 #' @param exportPartialResults if partial shapefiles have to be exported Default
 #'        is FALSE.
 #' @param exportPath the path were shapefiles should be exported
@@ -30,6 +32,7 @@ buildSpatialDataset <- function(host, domain,
                                 cleanGeom = TRUE, cleanStrategy = "BUFFER",
                                 unionStrategy = "bbox",
                                 verbose = TRUE, ids = NULL,
+                                runParallel = FALSE, runCores = 1,
                                 exportPartialResults = FALSE, exportPath = getwd()){
   
   if(!(host %in% c("http://figisapps.fao.org", "http://www.fao.org")))
@@ -62,41 +65,51 @@ buildSpatialDataset <- function(host, domain,
     refs <- refs[refs$factsheet %in% ids,]
   }
   
-  out.sp <- lapply(1:nrow(refs),
-                   function(x){
-                     out <- NULL
-                     out.points <- NULL
-                     
-                     #produce polygon dataset
-                     out <- buildSpatialObject(refs[x,"factsheet"], refs[x,"lang"], host, domain,
-                                               cleanGeom, cleanStrategy, unionStrategy, verbose)
-                     if(exportPartialResults){
-                       if(!is.null(out)){
-                         if(verbose){
-                           logger.info("Exporting polygon output to ESRI shapefile...")
-                         }
-                         filename <- paste0(domain, "_", refs[x,"factsheet"])
-                         exportFeatures(out, file.path = exportPath, file.name = filename)
-                       }
-                     }
-                     
-                     #produce pointOnSurface dataset
-                     if(!is.null(out)){
-                      out.points <- gPointOnSurface(out, byid = TRUE)
-                      out.points <- SpatialPointsDataFrame(out.points, data = out@data, match.ID = TRUE)
-                      if(exportPartialResults){
-                        if(!is.null(out.points)){
-                          if(verbose){
-                            logger.info("Exporting point output to ESRI shapefile...")
-                          }
-                          filename <- paste0(domain, "_point_", refs[x,"factsheet"])
-                          exportFeatures(out.points, file.path = exportPath, file.name = filename)
-                        }
-                      }
-                     }
-                     
-                     return(out.points)
-                   })
+  doBuild <- function(x, refs, host, domain, cleanGeom, cleanStrategy, verbose){
+    out <- NULL
+    out.points <- NULL
+    
+    #produce polygon dataset
+    out <- buildSpatialObject(refs[x,"factsheet"], refs[x,"lang"], host, domain,
+                              cleanGeom, cleanStrategy, unionStrategy, verbose)
+    if(exportPartialResults){
+      if(!is.null(out)){
+        if(verbose){
+          logger.info("Exporting polygon output to ESRI shapefile...")
+        }
+        filename <- paste0(domain, "_", refs[x,"factsheet"])
+        exportFeatures(out, file.path = exportPath, file.name = filename)
+      }
+    }
+    
+    #produce pointOnSurface dataset
+    if(!is.null(out)){
+      out.points <- gPointOnSurface(out, byid = TRUE)
+      out.points <- SpatialPointsDataFrame(out.points, data = out@data, match.ID = TRUE)
+      if(exportPartialResults){
+        if(!is.null(out.points)){
+          if(verbose){
+            logger.info("Exporting point output to ESRI shapefile...")
+          }
+          filename <- paste0(domain, "_point_", refs[x,"factsheet"])
+          exportFeatures(out.points, file.path = exportPath, file.name = filename)
+        }
+      }
+    }
+    
+    return(out.points)
+  }
+  
+  if(runParallel){
+    out.sp <- parallel::mclapply(1:nrow(refs), doBuild,
+                refs, host, domain, cleanGeom, cleanStrategy, verbose,
+                mc.preschedule = TRUE, mc.cores = runCores)
+  }else{
+    out.sp <- lapply(1:nrow(refs), doBuild,
+                     refs, host, domain, cleanGeom, cleanStrategy, verbose)
+  }
+  
+  
   out.sp <- out.sp[!sapply(out.sp, is.null)]
   
   output.sp <- NULL

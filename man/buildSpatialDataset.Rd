@@ -6,7 +6,8 @@
 \usage{
 buildSpatialDataset(host, domain, cleanGeom = TRUE,
   cleanStrategy = "BUFFER", unionStrategy = "bbox", verbose = TRUE,
-  ids = NULL, exportPartialResults = FALSE, exportPath = getwd())
+  ids = NULL, runParallel = FALSE, runCores = 1,
+  exportPartialResults = FALSE, exportPath = getwd())
 }
 \arguments{
 \item{host}{an object of class "character" giving the host}
@@ -27,6 +28,10 @@ time consuming). Default value is "bbox".}
 Default value is TRUE.}
 
 \item{ids}{a vector of resource IDs for which the computation has to be run}
+
+\item{runParallel}{To run code with parallel R interface. Default is FALSE}
+
+\item{runCores}{Number of cores to use when parallel = TRUE.}
 
 \item{exportPartialResults}{if partial shapefiles have to be exported Default
 is FALSE.}
