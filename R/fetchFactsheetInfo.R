@@ -362,7 +362,7 @@ fetchFactsheetInfo <- function(factsheet, lang, domain, host, verbose = TRUE){
   logger.info(paste0("GET ", fsUrl))
   out <- NULL
   fsXML <- tryCatch({
-    reqText <- getURL(fsUrl)
+    reqText <- getURL(fsUrl, .encoding = "UTF-8")
     Encoding(reqText) <- "UTF-8"
     fsXML <- xmlParse(reqText)
   },error = function(err){
