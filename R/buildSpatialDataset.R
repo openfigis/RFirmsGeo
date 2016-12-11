@@ -42,19 +42,7 @@ buildSpatialDataset <- function(host, domain,
     stop("Unknown domain")
   
   #list of items/lang per domain
-  domainUrl <- sprintf("%s/figis/ws/factsheets/domain/%s/factsheet", host, domain)
-  logger.info(paste0("GET ", domainUrl))
-  reqText <- getURL(domainUrl)
-  domainXml <- xmlParse(reqText)
-  items <- sapply(getNodeSet(domainXml, "//fiws:FactsheetDiscriminator"),
-                  xmlGetAttr, "factsheet")
-  lang <- sapply(getNodeSet(domainXml, "//fiws:FactsheetDiscriminator"),
-                xmlGetAttr, "lang")
-  refs <- data.frame(
-    factsheet = items,
-    lang = lang,
-    stringsAsFactors = FALSE
-  ) 
+  refs <- fetchFactsheetReferences(host, domain, verbose)
   dup <- refs[duplicated(refs$factsheet),"factsheet"]
   refs <- rbind(
     refs[!(refs$factsheet %in% dup),],

@@ -358,7 +358,7 @@ fetchFactsheetInfo <- function(factsheet, lang, domain, host, verbose = TRUE){
   fiNS <- "http://www.fao.org/fi/figis/devcon/"
   dcNS <- "http://purl.org/dc/elements/1.1/"
   
-  fsUrl <- sprintf("%s/figis/ws/factsheets/domain/%s/factsheet/%s/language/%s", host, domain, factsheet, lang)
+  fsUrl <- sprintf("%s/figis/moniker/figisdoc/%s/%s/%s", host, domain, factsheet, lang)
   logger.info(paste0("GET ", fsUrl))
   out <- NULL
   fsXML <- tryCatch({
@@ -426,4 +426,49 @@ fetchFactsheetInfo <- function(factsheet, lang, domain, host, verbose = TRUE){
   }	
   
   return(out)
+}
+
+#' @name fetchFactsheetReferences
+#' @aliases fetchFactsheetReferences
+#' @title fetchFactsheetReferences
+#' 
+#' @description
+#' A function to fetch the factsheet references (factsheet id, language)
+#'
+#' @param host an object of class "character" giving the host
+#' @param domain an object of class "character" giving the FIRMS domain
+#' @param verbose if logs should be printed out. Default is TRUE
+#' @return an object of class "data.frame"
+#' 
+#' @note function used internally to build FIRMS spatial objects
+#' 
+#' @author Emmanuel Blondel, \email{emmanuel.blondel1@@gmail.com}
+#'
+fetchFactsheetReferences <- function(host, domain, verbose = TRUE){
+  
+  if(verbose) logger.info("Fetching list of factsheet references")
+  
+  domainName <- switch(domain,
+                       "resource" = "firmsmarineresources",
+                       "fishery" = "firmsfisheries"
+  )
+  domainUrl <- sprintf("%s/figis/moniker/%s", host, domainName)
+  
+  logger.info(paste0("GET ", domainUrl))
+  reqText <- getURL(domainUrl)
+  domainXml <- xmlParse(reqText)
+  xmlURIList <- sapply(getNodeSet(domainXml, "//arrayitem"), xmlGetAttr, "xmlURI")
+  xmlURIList <- xmlURIList[!sapply(xmlURIList, is.null)]
+  baseURI <- sprintf("%s/figis/moniker/figisdoc/%s/", host, domain)
+  refs <- as.data.frame(
+    do.call("rbind",
+            lapply(xmlURIList,
+                   function(x){
+                     obj <- unlist(strsplit(unlist(strsplit(x, baseURI))[2],"/"))
+                     return(list(factsheet = obj[1], lang = obj[2]))
+                   }
+            )),
+    stringsAsFactors = FALSE
+  )
+  return(refs)
 }
