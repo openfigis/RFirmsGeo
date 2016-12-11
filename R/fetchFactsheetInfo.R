@@ -465,10 +465,11 @@ fetchFactsheetReferences <- function(host, domain, verbose = TRUE){
             lapply(xmlURIList,
                    function(x){
                      obj <- unlist(strsplit(unlist(strsplit(x, baseURI))[2],"/"))
-                     return(list(factsheet = obj[1], lang = obj[2]))
+                     return(obj)
                    }
             )),
     stringsAsFactors = FALSE
   )
+  colnames(refs) <- c("factsheet","lang")
   return(refs)
 }
