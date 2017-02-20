@@ -20,28 +20,8 @@
 #'
 readSpatialObject <- function(layer, cleanGeom = TRUE, cleanStrategy = "BUFFER", verbose = TRUE){
   
-  #base request
-  host <- unique(layer$url)
-  typeName <- unique(layer$typeName)
-  wfsRequest <- sprintf("%s?service=WFS&version=1.0.0&request=GetFeature&typeName=%s",
-                        host, typeName)
-  
-  #filters
-  cqlFilter = NULL
-  for(i in 1:nrow(layer)){
-    gisItem <- layer[i,]
-    key <- gisItem$propertyName
-    value <- gisItem$propertyValue
-    if(!is.na(key) | !is.na(value)){
-      gisFilter = sprintf("%s = '%s'", key, value)
-      if(is.null(cqlFilter)){
-        cqlFilter = gisFilter
-      }else{
-        cqlFilter = paste(cqlFilter, "OR", gisFilter, sep=" ")
-      }
-    }
-  }
-  if(!is.null(cqlFilter)) wfsRequest <- paste0(wfsRequest, "&cql_filter=", cqlFilter)
+  #prepare WFS request
+  wfsRequest <- prepareWFSRequest(layer)
   if(verbose) logger.info(paste0("GET ",wfsRequest))
   
   #download data
