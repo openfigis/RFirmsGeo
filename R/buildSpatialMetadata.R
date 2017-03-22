@@ -95,7 +95,7 @@ buildSpatialMetadata <- function(sp){
   d$setDateType("revision")
   ct$addDate(d)
   ct$setEdition("1.0")
-  ct$setEditionDate(mdDate)
+  ct$setEditionDate(as.Date(mdDate))
   ct$setIdentifier(mdId)
   ct$setPresentationForm("mapDigital")
   
