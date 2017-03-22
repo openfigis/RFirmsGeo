@@ -248,12 +248,17 @@ buildSpatialMetadata <- function(sp){
                         "resource" = "http://www.fao.org/figis/moniker/firmsmarineresources",
                         "fishery" = "http://www.fao.org/figis/moniker/firmsfisheries"
   )
-  statement <- paste0("Methodology: The point dataset of ", domainName," has been derivated from the factsheets (listed at ", monikerLink,") geographic references.",
-                       "Geographic References were fetched through Web Feature Services. Point derivation was performed through a 'bounding-box' to estimate ",
+  statement <- paste0("Methodology: The dataset of ", domainName," here described has been derivated from the factsheets (listed at ", monikerLink,") and its geographic standard references. ",
+                       "Factsheet geographic references were fetched through OGC Web Feature Services (WFS). The was performed through a 'bounding-box' to estimate ",
                        "the largest bounding box to retain, by comparing geographic reference envelopes. All the tasks were performed through the R package ", 
-                       "RFirmsGeo (available at http://github.com/openfigis/RFirmsGeo). Data was published from R using package 'geosapi' (available at ",
-                       "http://github.com/eblondel/geosapi). Present metadata generated on-the-fly from R using package 'geometa' (available at ",
-                       "http://github.com/eblondel/geosapi).")
+                       "'RFirmsGeo' (more information at http://github.com/openfigis/RFirmsGeo) developed by the FAO Fisheries & Aquaculture Department, ",
+                      "and benefiting from the computing resources of the D4Science infrastructure (see https://www.d4science.org). ",
+                      "Data and the present metadata description were published (updated) on ",
+                       format(mdDate, "%Y-%m-%d")," from R using the suite of standard packages ",
+                       "'geosapi' (see https://github.com/eblondel/geosapi) for data publication, ",
+                       "'geometa' (see https://github.com/eblondel/geometa) for metadata creation, ",
+                       "'geonapi' (see https://github.com/eblondel/geonapi) for metadata publication."
+                     )
   lineage$setStatement(statement)
   dq$setLineage(lineage)
   md$setDataQualityInfo(dq)
