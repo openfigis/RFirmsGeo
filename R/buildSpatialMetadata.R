@@ -201,7 +201,7 @@ buildSpatialMetadata <- function(sp){
   dto$addOnlineResource(csw)
   #add FIRMS viewer link
   mv <- ISOOnlineResource$new()
-  mv$setLinkage(sprintf("http://www.fao.org/figis/geoserver/factsheets/firms.html?layer=%s", domain))
+  mv$setLinkage(sprintf("http://firms.fao.org/firms/stocks-fisheries-map-viewer?layer=%s", domain))
   mv$setName("Map viewer")
   mv$setDescription("FIRMS Stocks and Fisheries map viewer")
   mv$setProtocol("WWW:LINK-1.0-http--link")
