@@ -40,7 +40,7 @@ buildSpatialMetadata <- function(sp){
   #----------------------------
   indRP1 <- ISOResponsibleParty$new()
   indRP1$setIndividualName("FIRMS Secretariat")
-  indRP1$setOrganizationName("Fisheries and Resources Monitoring System (FIRMS)")
+  indRP1$setOrganisationName("Fisheries and Resources Monitoring System (FIRMS)")
   indRP1$setRole("pointOfContact")
   contact <- ISOContact$new()
   address <- ISOAddress$new()
