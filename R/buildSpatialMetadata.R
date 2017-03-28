@@ -38,11 +38,25 @@ buildSpatialMetadata <- function(sp){
   
   #individual point of contact
   #----------------------------
-  indRP <- ISOResponsibleParty$new()
-  indRP$setIndividualName("Emmanuel Blondel")
-  indRP$setOrganisationName("FAO - Fisheries and Aquaculture Department (FI). Fisheries and Aquaculture Policy and Resources Division (FIA)")
-  indRP$setPositionName("GIS Scientist - International Consultant in Geographic Information Systems")
-  indRP$setRole("pointOfContact")
+  indRP1 <- ISOResponsibleParty$new()
+  indRP1$setIndividualName("FIRMS Secretariat")
+  indRP1$setOrganizationName("Fisheries and Resources Monitoring System (FIRMS)")
+  indRP1$setRole("pointOfContact")
+  contact <- ISOContact$new()
+  address <- ISOAddress$new()
+  address$setEmail("FIRMS-Secretariat@fao.org")
+  contact$setAddress(address)
+  res <- ISOOnlineResource$new()
+  res$setLinkage("http://firms.fao.org/firms/en")
+  res$setName("Fisheries and Resources Monitoring System (FIRMS)")
+  contact$setOnlineResource(res)
+  indRP1$setContactInfo(contact)
+  md$addContact(indRP1)
+  indRP2 <- ISOResponsibleParty$new()
+  indRP2$setIndividualName("Emmanuel Blondel")
+  indRP2$setOrganisationName("FAO - Fisheries and Aquaculture Department (FI). Fisheries and Aquaculture Policy and Resources Division (FIA)")
+  indRP2$setPositionName("GIS Scientist - International Consultant in Geographic Information Systems")
+  indRP2$setRole("processor")
   contact <- ISOContact$new()
   address <- ISOAddress$new()
   address$setEmail("Emmanuel.Blondel@fao.org")
@@ -51,8 +65,8 @@ buildSpatialMetadata <- function(sp){
   res$setLinkage("http://www.fao.org/fishery/en")
   res$setName("FAO - Fisheries and Aquaculture Department (FI)")
   contact$setOnlineResource(res)
-  indRP$setContactInfo(contact)
-  md$addContact(indRP)
+  indRP2$setContactInfo(contact)
+  md$addContact(indRP2)
   
   #VectorSpatialRepresentation
   #---------------------------
@@ -77,12 +91,8 @@ buildSpatialMetadata <- function(sp){
   ident$setPurpose("The primary aim of the Fisheries and Resources Monitoring System (FIRMS) is to provide access to a wide range of high-quality information on the global monitoring and management of fishery marine resources.")
   ident$setLanguage("eng")
   ident$setCharacterSet("utf8")
-  ident$addTopicCategory("oceans")
-  if(domain == "resource"){
-    ident$addTopicCategory("biota")
-  }else if(domain == "fishery"){
-    ident$addTopicCategory("economy")
-  }
+  ident$addTopicCategory("biota")
+  ident$addTopicCategory("economy")
   
   #adding a point of contact
   ident$addPointOfContact(indRP)
@@ -116,6 +126,7 @@ buildSpatialMetadata <- function(sp){
   contact$setOnlineResource(res)
   orgRP$setContactInfo(contact)
   ct$setCitedResponsibleParty(orgRP)
+  ct$setCitedResponsibleParty(indRP1)
   ident$setCitation(ct)
   
   #graphic overview
