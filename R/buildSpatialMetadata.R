@@ -95,7 +95,8 @@ buildSpatialMetadata <- function(sp){
   ident$addTopicCategory("economy")
   
   #adding a point of contact
-  ident$addPointOfContact(indRP)
+  ident$addPointOfContact(indRP1)
+  ident$addPointOfContact(indRP2)
   
   #citation
   ct <- ISOCitation$new()
@@ -126,7 +127,6 @@ buildSpatialMetadata <- function(sp){
   contact$setOnlineResource(res)
   orgRP$setContactInfo(contact)
   ct$setCitedResponsibleParty(orgRP)
-  ct$setCitedResponsibleParty(indRP1)
   ident$setCitation(ct)
   
   #graphic overview
