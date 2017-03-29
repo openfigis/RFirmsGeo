@@ -163,6 +163,7 @@ buildSpatialMetadata <- function(sp){
   #add keywords
   kwds <- ISOKeywords$new()
   kwds$addKeyword("FIRMS")
+  kwds$addKeyword("FIGIS")
   if(domain == "resource"){
     kwds$addKeyword("marine resource")
   }else if(domain == "fishery"){
