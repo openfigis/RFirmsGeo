@@ -145,7 +145,7 @@ buildSpatialMetadata <- function(sp){
   #adding legal constraints
   lc <- ISOLegalConstraints$new()
   lc$addUseLimitation("The terms and conditions are available at http://www.fao.org/contact-us/terms/en")
-  lc$addUseLimitation(sprintf("Usabe subject to mandatory citation: © FAO, %s. %s. In: FAO - Fisheries and Aquaculture Department (FI) [online]. Rome. Updated %s [Cited <DATE>] %s",
+  lc$addUseLimitation(sprintf("Usage subject to mandatory citation: © FAO, %s. %s. In: FAO - Fisheries and Aquaculture Department (FI) [online]. Rome. Updated %s [Cited <DATE>] %s",
                       format(mdDate, "%Y"), mdTitle, format(mdDate, "%Y-%m-%d"), mdLinkHTML))
   lc$addUseLimitation("Disclaimer: The designations employed and the presentation of material in the map(s) are for illustration only and do not imply the expression of any opinion whatsoever on the part of FAO concerning the legal or constitutional status of any country, territory or sea area or concerning the delimitation of frontiers or boundaries")
   lc$addAccessConstraint("copyright")
