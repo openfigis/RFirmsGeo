@@ -29,7 +29,7 @@ buildSpatialMetadata <- function(sp){
   mdLinkWFS <- sprintf("http://www.fao.org/figis/geoserver/firms/ows?SERVICE=WFS&request=GetFeature&version=1.0.0&typeName=%s", mdLayerTitle)
   
   md = ISOMetadata$new()
-  md$setFileIdentifier(mdId)
+  md$setFileIdentifier(ISOMetaIdentifier$new(code = mdId))
   md$setCharacterSet("utf8")
   md$setLanguage("eng")
   md$setDateStamp(mdDate)
