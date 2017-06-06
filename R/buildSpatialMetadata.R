@@ -81,7 +81,7 @@ buildSpatialMetadata <- function(sp){
   #ReferenceSystem
   #----------------
   rs <- ISOReferenceSystem$new()
-  rs$setReferenceSystemIdentifier(code = "http://www.opengis.net/def/crs/EPSG/0/4326", codeSpace = "EPSG")
+  rs$setReferenceSystemIdentifier(ISOReferenceIdentifier$new(code = "http://www.opengis.net/def/crs/EPSG/0/4326", codeSpace = "EPSG"))
   md$setReferenceSystemInfo(rs)
   
   #data identification
