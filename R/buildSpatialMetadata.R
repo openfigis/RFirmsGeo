@@ -38,11 +38,25 @@ buildSpatialMetadata <- function(sp){
   
   #individual point of contact
   #----------------------------
-  indRP <- ISOResponsibleParty$new()
-  indRP$setIndividualName("Emmanuel Blondel")
-  indRP$setOrganisationName("FAO - Fisheries and Aquaculture Department (FI). Fisheries and Aquaculture Policy and Resources Division (FIA)")
-  indRP$setPositionName("GIS Scientist - International Consultant in Geographic Information Systems")
-  indRP$setRole("pointOfContact")
+  indRP1 <- ISOResponsibleParty$new()
+  indRP1$setIndividualName("FIRMS Secretariat")
+  indRP1$setOrganisationName("Fisheries and Resources Monitoring System (FIRMS)")
+  indRP1$setRole("pointOfContact")
+  contact <- ISOContact$new()
+  address <- ISOAddress$new()
+  address$setEmail("FIRMS-Secretariat@fao.org")
+  contact$setAddress(address)
+  res <- ISOOnlineResource$new()
+  res$setLinkage("http://firms.fao.org/firms/en")
+  res$setName("Fisheries and Resources Monitoring System (FIRMS)")
+  contact$setOnlineResource(res)
+  indRP1$setContactInfo(contact)
+  md$addContact(indRP1)
+  indRP2 <- ISOResponsibleParty$new()
+  indRP2$setIndividualName("Emmanuel Blondel")
+  indRP2$setOrganisationName("FAO - Fisheries and Aquaculture Department (FI). Fisheries and Aquaculture Policy and Resources Division (FIA)")
+  indRP2$setPositionName("GIS Scientist - International Consultant in Geographic Information Systems")
+  indRP2$setRole("processor")
   contact <- ISOContact$new()
   address <- ISOAddress$new()
   address$setEmail("Emmanuel.Blondel@fao.org")
@@ -51,8 +65,8 @@ buildSpatialMetadata <- function(sp){
   res$setLinkage("http://www.fao.org/fishery/en")
   res$setName("FAO - Fisheries and Aquaculture Department (FI)")
   contact$setOnlineResource(res)
-  indRP$setContactInfo(contact)
-  md$addContact(indRP)
+  indRP2$setContactInfo(contact)
+  md$addContact(indRP2)
   
   #VectorSpatialRepresentation
   #---------------------------
@@ -67,7 +81,7 @@ buildSpatialMetadata <- function(sp){
   #ReferenceSystem
   #----------------
   rs <- ISOReferenceSystem$new()
-  rs$setReferenceSystemIdentifier(code = "http://www.opengis.net/def/crs/EPSG/0/4326", codeSpace = "EPSG")
+  rs$setReferenceSystemIdentifier(ISOReferenceIdentifier$new(code = "http://www.opengis.net/def/crs/EPSG/0/4326", codeSpace = "EPSG"))
   md$setReferenceSystemInfo(rs)
   
   #data identification
@@ -77,15 +91,12 @@ buildSpatialMetadata <- function(sp){
   ident$setPurpose("The primary aim of the Fisheries and Resources Monitoring System (FIRMS) is to provide access to a wide range of high-quality information on the global monitoring and management of fishery marine resources.")
   ident$setLanguage("eng")
   ident$setCharacterSet("utf8")
-  ident$addTopicCategory("oceans")
-  if(domain == "resource"){
-    ident$addTopicCategory("biota")
-  }else if(domain == "fishery"){
-    ident$addTopicCategory("economy")
-  }
+  ident$addTopicCategory("biota")
+  ident$addTopicCategory("economy")
   
   #adding a point of contact
-  ident$addPointOfContact(indRP)
+  ident$addPointOfContact(indRP1)
+  ident$addPointOfContact(indRP2)
   
   #citation
   ct <- ISOCitation$new()
@@ -95,8 +106,8 @@ buildSpatialMetadata <- function(sp){
   d$setDateType("revision")
   ct$addDate(d)
   ct$setEdition("1.0")
-  ct$setEditionDate(d)
-  ct$setIdentifier(mdId)
+  ct$setEditionDate(as.Date(mdDate))
+  ct$setIdentifier(ISOMetaIdentifier$new(code = mdId))
   ct$setPresentationForm("mapDigital")
   
   #organization contact
@@ -134,7 +145,7 @@ buildSpatialMetadata <- function(sp){
   #adding legal constraints
   lc <- ISOLegalConstraints$new()
   lc$addUseLimitation("The terms and conditions are available at http://www.fao.org/contact-us/terms/en")
-  lc$addUseLimitation(sprintf("Usabe subject to mandatory citation: © FAO, %s. %s. In: FAO - Fisheries and Aquaculture Department (FI) [online]. Rome. Updated %s [Cited <DATE>] %s",
+  lc$addUseLimitation(sprintf("Usage subject to mandatory citation: © FAO, %s. %s. In: FAO - Fisheries and Aquaculture Department (FI) [online]. Rome. Updated %s [Cited <DATE>] %s",
                       format(mdDate, "%Y"), mdTitle, format(mdDate, "%Y-%m-%d"), mdLinkHTML))
   lc$addUseLimitation("Disclaimer: The designations employed and the presentation of material in the map(s) are for illustration only and do not imply the expression of any opinion whatsoever on the part of FAO concerning the legal or constitutional status of any country, territory or sea area or concerning the delimitation of frontiers or boundaries")
   lc$addAccessConstraint("copyright")
@@ -152,6 +163,7 @@ buildSpatialMetadata <- function(sp){
   #add keywords
   kwds <- ISOKeywords$new()
   kwds$addKeyword("FIRMS")
+  kwds$addKeyword("FIGIS")
   if(domain == "resource"){
     kwds$addKeyword("marine resource")
   }else if(domain == "fishery"){
@@ -199,6 +211,13 @@ buildSpatialMetadata <- function(sp){
   csw$setDescription("metadata (XML)")
   csw$setProtocol("WWW:LINK-1.0-http--link")
   dto$addOnlineResource(csw)
+  #add FIRMS viewer link
+  mv <- ISOOnlineResource$new()
+  mv$setLinkage(sprintf("http://firms.fao.org/firms/stocks-fisheries-map-viewer?layer=%s", domain))
+  mv$setName("Map viewer")
+  mv$setDescription("FIRMS Stocks and Fisheries map viewer")
+  mv$setProtocol("WWW:LINK-1.0-http--link")
+  dto$addOnlineResource(mv)
   #add FIRMS link
   firms <- ISOOnlineResource$new()
   firms$setLinkage("http://firms.fao.org")
@@ -241,12 +260,17 @@ buildSpatialMetadata <- function(sp){
                         "resource" = "http://www.fao.org/figis/moniker/firmsmarineresources",
                         "fishery" = "http://www.fao.org/figis/moniker/firmsfisheries"
   )
-  statement <- paste0("Methodology: The point dataset of ", domainName," has been derivated from the factsheets (listed at ", monikerLink,") geographic references.",
-                       "Geographic References were fetched through Web Feature Services. Point derivation was performed through a 'bounding-box' to estimate ",
+  statement <- paste0("Methodology: The dataset of ", domainName," here described has been derivated from the factsheets (listed at ", monikerLink,") and its geographic standard references. ",
+                       "Factsheet geographic references were fetched through OGC Web Feature Services (WFS). The was performed through a 'bounding-box' to estimate ",
                        "the largest bounding box to retain, by comparing geographic reference envelopes. All the tasks were performed through the R package ", 
-                       "RFirmsGeo (available at http://github.com/openfigis/RFirmsGeo). Data was published from R using package 'geosapi' (available at ",
-                       "http://github.com/eblondel/geosapi). Present metadata generated on-the-fly from R using package 'geometa' (available at ",
-                       "http://github.com/eblondel/geosapi).")
+                       "'RFirmsGeo' (more information at http://github.com/openfigis/RFirmsGeo) developed by the FAO Fisheries & Aquaculture Department, ",
+                      "and benefiting from the computing resources of the D4Science infrastructure (see https://www.d4science.org). ",
+                      "Data and the present metadata description were published (updated) on ",
+                       format(mdDate, "%Y-%m-%d")," from R using the suite of standard packages ",
+                       "'geosapi' (see https://github.com/eblondel/geosapi) for data publication, ",
+                       "'geometa' (see https://github.com/eblondel/geometa) for metadata creation, ",
+                       "'geonapi' (see https://github.com/eblondel/geonapi) for metadata publication."
+                     )
   lineage$setStatement(statement)
   dq$setLineage(lineage)
   md$setDataQualityInfo(dq)
