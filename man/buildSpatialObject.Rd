@@ -4,7 +4,7 @@
 \alias{buildSpatialObject}
 \title{buildSpatialObject}
 \usage{
-buildSpatialObject(item, lang, host, domain, cleanGeom = TRUE,
+buildSpatialObject(item, lang, host, domain, wfs, cleanGeom = TRUE,
   cleanStrategy = "BUFFER", unionStrategy = "bbox", verbose = TRUE)
 }
 \arguments{
@@ -15,6 +15,8 @@ buildSpatialObject(item, lang, host, domain, cleanGeom = TRUE,
 \item{host}{an object of class "character" giving the host}
 
 \item{domain}{an object of class "character" giving the FIRMS domain}
+
+\item{wfs}{an object of class "WFSClient" from \pkg{ows4R} package}
 
 \item{cleanGeom}{an object of class "logical" indicating if geometries have to
 be validated with \pkg{cleangeo}. Default value is TRUE.}

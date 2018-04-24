@@ -4,10 +4,12 @@
 \alias{readSpatialObject}
 \title{readSpatialObject}
 \usage{
-readSpatialObject(layer, cleanGeom = TRUE, cleanStrategy = "BUFFER",
+readSpatialObject(wfs, layer, cleanGeom = TRUE, cleanStrategy = "BUFFER",
   verbose = TRUE)
 }
 \arguments{
+\item{wfs}{instance of WFS client, object of class \code{WFSClient} from \pkg{ows4R}}
+
 \item{layer}{an object of class "data.frame" (single record) giving information
 about a GIS web-layer to query}
 
