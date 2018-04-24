@@ -5,6 +5,7 @@
 #' @description
 #' A function to read a spatial object from an layer item
 #'
+#' @param wfs instance of WFS client, object of class \code{WFSClient} from \pkg{ows4R}
 #' @param layer an object of class "data.frame" (single record) giving information
 #'        about a GIS web-layer to query
 #' @param cleanGeom an object of class "logical" indicating if geometries have to
@@ -18,21 +19,42 @@
 #' 
 #' @author Emmanuel Blondel, \email{emmanuel.blondel1@@gmail.com}
 #'
-readSpatialObject <- function(layer, cleanGeom = TRUE, cleanStrategy = "BUFFER", verbose = TRUE){
+readSpatialObject <- function(wfs, layer, cleanGeom = TRUE, cleanStrategy = "BUFFER", verbose = TRUE){
   
-  #prepare WFS request
-  wfsRequest <- prepareWFSRequest(layer)
-  if(verbose) logger.info(paste0("GET ",wfsRequest))
+  #get featuretype
+  caps <- wfs$getCapabilities()
+  ft <- caps$findFeatureTypeByName(layer$typeName[1], exact = TRUE)
+  if(is.null(ft)){
+    logger.error(sprintf("Unknown GIS web-resource '%s'", layer$typeName))
+    return(NULL)
+  }
+  
+  #filters
+  cqlFilter = NULL
+  for(i in 1:nrow(layer)){
+    gisItem <- layer[i,]
+    key <- gisItem$propertyName
+    value <- gisItem$propertyValue
+    if(!is.na(key) | !is.na(value)){
+      gisFilter = sprintf("%s = '%s'", key, value)
+      if(is.null(cqlFilter)){
+        cqlFilter = gisFilter
+      }else{
+        cqlFilter = paste(cqlFilter, "OR", gisFilter, sep=" ")
+      }
+    }
+  }
   
   #download data
   out <- NULL
-  out <- suppressWarnings(tryCatch(readWFS(wfsRequest, verbose = verbose),
+  out <- suppressWarnings(tryCatch(ft$getFeatures(cql_filter = cqlFilter),
                   error = function(err){
                     if(verbose){
                       logger.warn("Unknown or Empty filtered GIS web-resource")
                     }
                   }))
   if(!is.null(out)){
+    out <- as(out, "Spatial")
     if(cleanGeom){
       out <- clgeo_Clean(out, strategy = cleanStrategy)
     }
@@ -47,6 +69,7 @@ readSpatialObject <- function(layer, cleanGeom = TRUE, cleanStrategy = "BUFFER",
 #' @description
 #' A function to list spatial objects from a list of layer items
 #'
+#' @param wfs instance of WFS client, object of class \code{WFSClient} from \pkg{ows4R}
 #' @param layers an object of class "data.frame" (single record) giving information
 #'        about a GIS web-layer to query
 #' @param cleanGeom an object of class "logical" indicating if geometries have to
@@ -60,11 +83,11 @@ readSpatialObject <- function(layer, cleanGeom = TRUE, cleanStrategy = "BUFFER",
 #' 
 #' @author Emmanuel Blondel, \email{emmanuel.blondel1@@gmail.com}
 #'
-readSpatialObjects <- function(layers, cleanGeom = TRUE, cleanStrategy = TRUE, verbose = TRUE){
+readSpatialObjects <- function(wfs, layers, cleanGeom = TRUE, cleanStrategy = TRUE, verbose = TRUE){
   logger.info("Read spatial objects...")
   sp.layers <- lapply(unique(layers$typeName), function(x){
     geoitem <- layers[layers$typeName == x,]
-    sp <- readSpatialObject(geoitem, cleanGeom, cleanStrategy, verbose)
+    sp <- readSpatialObject(wfs, geoitem, cleanGeom, cleanStrategy, verbose)
     return(sp)
   })
   sp.layers <- sp.layers[!sapply(sp.layers, is.null)]

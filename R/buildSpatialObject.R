@@ -9,6 +9,7 @@
 #' @param lang the language in which the factsheet is available
 #' @param host an object of class "character" giving the host
 #' @param domain an object of class "character" giving the FIRMS domain
+#' @param wfs an object of class "WFSClient" from \pkg{ows4R} package
 #' @param cleanGeom an object of class "logical" indicating if geometries have to
 #'        be validated with \pkg{cleangeo}. Default value is TRUE.
 #' @param cleanStrategy an object of class "character". Default is "BUFFER"
@@ -25,6 +26,7 @@
 #' @author Emmanuel Blondel, \email{emmanuel.blondel1@@gmail.com}
 #'
 buildSpatialObject <- function(item, lang, host, domain,
+                               wfs,
                                cleanGeom = TRUE, cleanStrategy = "BUFFER",
                                unionStrategy = "bbox",
                                verbose = TRUE){
@@ -65,11 +67,11 @@ buildSpatialObject <- function(item, lang, host, domain,
   
   #collect list of Spatial objects for water areas
   waterareas <- items[items$category %in% c("WaterArea","LandArea"),]
-  area.sp.list <- readSpatialObjects(waterareas, cleanGeom, cleanStrategy, verbose)
+  area.sp.list <- readSpatialObjects(wfs, waterareas, cleanGeom, cleanStrategy, verbose)
   
   #collect andlist of spatial objects for species distributions
   species <- items[items$category == "SpeciesDistribution",]
-  species.sp.list <- readSpatialObjects(species, cleanGeom, cleanStrategy, verbose)
+  species.sp.list <- readSpatialObjects(wfs, species, cleanGeom, cleanStrategy, verbose)
   
   #apply union strategy with species distributions (if more than one)
   if(length(species.sp.list) > 1){

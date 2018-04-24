@@ -53,12 +53,17 @@ buildSpatialDataset <- function(host, domain,
     refs <- refs[refs$factsheet %in% ids,]
   }
   
-  doBuild <- function(x, refs, host, domain, cleanGeom, cleanStrategy, verbose){
+  #wfs client
+  wfs_verbose <- ifelse(verbose, "DEBUG", "INFO")
+  wfs <- ows4R::WFSClient$new(paste0(host,"/figis/geoserver/ows"), "1.0.0", logger = wfs_verbose)
+  
+  #doBuild
+  doBuild <- function(x, refs, host, domain, wfs, cleanGeom, cleanStrategy, verbose){
     out <- NULL
     out.points <- NULL
     
     #produce polygon dataset
-    out <- buildSpatialObject(refs[x,"factsheet"], refs[x,"lang"], host, domain,
+    out <- buildSpatialObject(refs[x,"factsheet"], refs[x,"lang"], host, domain, wfs,
                               cleanGeom, cleanStrategy, unionStrategy, verbose)
     if(exportPartialResults){
       if(!is.null(out)){
@@ -90,11 +95,11 @@ buildSpatialDataset <- function(host, domain,
   
   if(runParallel){
     out.sp <- parallel::mclapply(1:nrow(refs), doBuild,
-                refs, host, domain, cleanGeom, cleanStrategy, verbose,
+                refs, host, domain, wfs, cleanGeom, cleanStrategy, verbose,
                 mc.preschedule = TRUE, mc.cores = runCores)
   }else{
     out.sp <- lapply(1:nrow(refs), doBuild,
-                     refs, host, domain, cleanGeom, cleanStrategy, verbose)
+                     refs, host, domain, wfs, cleanGeom, cleanStrategy, verbose)
   }
   
   
