@@ -47,13 +47,23 @@ readSpatialObject <- function(wfs, layer, cleanGeom = TRUE, cleanStrategy = "BUF
   if(!is.null(cqlFilter)) cqlFilter <- utils::URLencode(cqlFilter)
   
   #download data
+  #TODO add control in ows4R vendor Params if param is NULL remove it
   out <- NULL
-  out <- suppressWarnings(tryCatch(ft$getFeatures(cql_filter = cqlFilter),
-                  error = function(err){
-                    if(verbose){
-                      logger.warn("Unknown or Empty filtered GIS web-resource")
-                    }
-                  }))
+  if(!is.null(cqlFilter)){
+    out <- suppressWarnings(tryCatch(ft$getFeatures(cql_filter = cqlFilter),
+                    error = function(err){
+                      if(verbose){
+                        logger.warn("Unknown or Empty filtered GIS web-resource")
+                      }
+                    }))
+  }else{
+    out <- suppressWarnings(tryCatch(ft$getFeatures(),
+                    error = function(err){
+                      if(verbose){
+                        logger.warn("Unknown or Empty filtered GIS web-resource")
+                      }
+                    }))
+  }
   if(!is.null(out)){
     out <- as(out, "Spatial")
     if(cleanGeom){
