@@ -44,6 +44,7 @@ readSpatialObject <- function(wfs, layer, cleanGeom = TRUE, cleanStrategy = "BUF
       }
     }
   }
+  if(!is.null(cqlFilter)) cqlFilter <- utils::URLencode(cqlFilter)
   
   #download data
   out <- NULL
