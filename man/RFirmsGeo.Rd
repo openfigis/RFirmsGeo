@@ -13,8 +13,8 @@ factsheet web-resources.
 \tabular{ll}{
    Package: \tab RFirmsGeo\cr
    Type: \tab Package\cr
-   Version: \tab 0.2\cr
-   Date: \tab 2018-04-24\cr
+   Version: \tab 0.2-1\cr
+   Date: \tab 2018-09-14\cr
    License: \tab GPL(>=2.0)\cr
    LazyLoad: \tab yes\cr
  }
