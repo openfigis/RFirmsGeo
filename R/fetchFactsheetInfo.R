@@ -361,16 +361,20 @@ fetchFactsheetInfo <- function(factsheet, lang, domain, host, verbose = TRUE){
   fsUrl <- sprintf("%s/figis/moniker/figisdoc/%s/%s/%s", host, domain, factsheet, lang)
   logger.info(paste0("GET ", fsUrl))
   out <- NULL
-  fsXML <- tryCatch({
+  reqText <- tryCatch({
     userAgent <- paste0("FAO-RFirmsGeo-", packageVersion("RFirmsGeo"))
-    reqText <- getURL(fsUrl, httpheader = list('User-Agent' = userAgent), .encoding = "UTF-8")
+    reqText <- getURL(fsUrl, httpheader = list('User-Agent' = userAgent), .encoding = "UTF-8") 
     Encoding(reqText) <- "UTF-8"
-    fsXML <- xmlParse(reqText)
+    reqText
   },error = function(err){
     logger.info(sprintf("Factsheet %s does not exist", factsheet))
+    logger.error(err)
     return(NULL)
   })
-  if(!is.null(fsXML)){
+  
+  fsXML <- try(xmlParse(reqText))
+
+  if(class(fsXML)!="try-error"){
   
     xpathIdent <- switch(domain,  	
                         "resource" = "AqResIdent",		
@@ -424,7 +428,10 @@ fetchFactsheetInfo <- function(factsheet, lang, domain, host, verbose = TRUE){
       )
      
     }
-  }	
+  }else{
+    logger.error("Factsheet XML request doesn't return XML content")
+    logger.error(reqText)
+  }
   
   return(out)
 }
