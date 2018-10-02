@@ -374,7 +374,7 @@ fetchFactsheetInfo <- function(factsheet, lang, domain, host, verbose = TRUE){
   
   fsXML <- try(xmlParse(reqText))
 
-  if(class(fsXML)!="try-error"){
+  if(class(fsXML)[1]!="try-error"){
   
     xpathIdent <- switch(domain,  	
                         "resource" = "AqResIdent",		
