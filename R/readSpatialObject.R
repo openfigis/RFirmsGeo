@@ -63,11 +63,14 @@ readSpatialObject <- function(wfs, layer, cleanGeom = TRUE, cleanStrategy = "BUF
                       }
                     }))
   }
+  if(!is.null(out)) if(nrow(out)==0L) out <- NULL
   if(!is.null(out)){
     out <- as(out, "Spatial")
     if(cleanGeom){
       out <- clgeo_Clean(out, strategy = cleanStrategy)
     }
+  }else{
+    logger.warn("Unknown or Empty filtered GIS web-resource")  
   }
   return(out)
 }
