@@ -358,7 +358,7 @@ fetchFactsheetInfo <- function(factsheet, lang, domain, host, verbose = TRUE){
   fiNS <- "http://www.fao.org/fi/figis/devcon/"
   dcNS <- "http://purl.org/dc/elements/1.1/"
   
-  fsUrl <- sprintf("%s/figis/moniker/figisdoc/%s/%s/%s", host, domain, factsheet, lang)
+  fsUrl <- sprintf("%s/figis/monikerj/figisdoc/%s/%s/%s", host, domain, factsheet, lang)
   logger.info(paste0("GET ", fsUrl))
   out <- NULL
   reqText <- tryCatch({
@@ -460,14 +460,14 @@ fetchFactsheetReferences <- function(host, domain, verbose = TRUE){
                        "resource" = "firmsmarineresources",
                        "fishery" = "firmsfisheries"
   )
-  domainUrl <- sprintf("%s/figis/moniker/%s", host, domainName)
+  domainUrl <- sprintf("%s/figis/monikerj/%s", host, domainName)
   
   logger.info(paste0("GET ", domainUrl))
   reqText <- getURL(domainUrl)
   domainXml <- xmlParse(reqText)
   xmlURIList <- sapply(getNodeSet(domainXml, "//arrayitem"), xmlGetAttr, "xmlURI")
   xmlURIList <- xmlURIList[!sapply(xmlURIList, is.null)]
-  baseURI <- sprintf("%s/figis/moniker/figisdoc/%s/", host, domain)
+  baseURI <- sprintf("%s/figis/monikerj/figisdoc/%s/", host, domain)
   refs <- as.data.frame(
     do.call("rbind",
             lapply(xmlURIList,
