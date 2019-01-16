@@ -113,7 +113,7 @@ fetchFactsheetSpeciesInfo <- function(xml, domain){
                    function(x){
                      out <- NULL
                      foreignIdXML <- getNodeSet(xmlDoc(x), "//ns:ForeignID", c(ns = fiNS))
-                     foreignIdXML <- foreignIdXML[sapply(foreignIdXML, function(x) xmlGetAttr(x,"CodeSystem") == "fao3alpha")]
+                     if(length(foreignIdXML) > 0) foreignIdXML <- foreignIdXML[sapply(foreignIdXML, function(x) xmlGetAttr(x,"CodeSystem") == "fao3alpha")]
                      if(length(foreignIdXML) > 0){
                        foreignIdXML <- foreignIdXML[[1]]
                        out <- buildGISLayerInfo("SpeciesDistribution",xmlGetAttr(foreignIdXML, "CodeSystem"), xmlGetAttr(foreignIdXML, "Code"))
