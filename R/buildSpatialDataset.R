@@ -106,13 +106,15 @@ buildSpatialDataset <- function(host, domain,
   out.sp <- out.sp[!sapply(out.sp, is.null)]
   
   output.sp <- NULL
-  invisible(lapply(1:length(out.sp),function(i){
-       if(i==1){
-         output.sp <<- out.sp[[i]]
-       }else{
-         output.sp <<- spRbind(output.sp, out.sp[[i]])
-       }
-  }))
+  if(length(out.sp)>0){
+    invisible(lapply(1:length(out.sp),function(i){
+         if(i==1){
+           output.sp <<- out.sp[[i]]
+         }else{
+           output.sp <<- spRbind(output.sp, out.sp[[i]])
+         }
+    }))
+  }
   
   return(output.sp)
 }
