@@ -59,37 +59,41 @@ buildSpatialDataset <- function(host, domain,
   
   #doBuild
   doBuild <- function(x, refs, host, domain, wfs, cleanGeom, cleanStrategy, verbose){
-    out <- NULL
-    out.points <- NULL
     
-    #produce polygon dataset
-    out <- buildSpatialObject(refs[x,"factsheet"], refs[x,"lang"], host, domain, wfs,
-                              cleanGeom, cleanStrategy, unionStrategy, verbose)
-    if(exportPartialResults){
-      if(!is.null(out)){
-        if(verbose){
-          logger.info("Exporting polygon output to ESRI shapefile...")
-        }
-        filename <- paste0(domain, "_", refs[x,"factsheet"])
-        exportFeatures(out, file.path = exportPath, file.name = filename)
-      }
-    }
+    capture.output({
     
-    #produce pointOnSurface dataset
-    if(!is.null(out)){
-      out.points <- gPointOnSurface(out, byid = TRUE)
-      out.points <- SpatialPointsDataFrame(out.points, data = out@data, match.ID = TRUE)
+      out <- NULL
+      out.points <- NULL
+      
+      #produce polygon dataset
+      out <- buildSpatialObject(refs[x,"factsheet"], refs[x,"lang"], host, domain, wfs,
+                                cleanGeom, cleanStrategy, unionStrategy, verbose)
       if(exportPartialResults){
-        if(!is.null(out.points)){
+        if(!is.null(out)){
           if(verbose){
-            logger.info("Exporting point output to ESRI shapefile...")
+            logger.info("Exporting polygon output to ESRI shapefile...")
           }
-          filename <- paste0(domain, "_point_", refs[x,"factsheet"])
-          exportFeatures(out.points, file.path = exportPath, file.name = filename)
+          filename <- paste0(domain, "_", refs[x,"factsheet"])
+          exportFeatures(out, file.path = exportPath, file.name = filename)
         }
       }
-    }
-    
+      
+      #produce pointOnSurface dataset
+      if(!is.null(out)){
+        out.points <- gPointOnSurface(out, byid = TRUE)
+        out.points <- SpatialPointsDataFrame(out.points, data = out@data, match.ID = TRUE)
+        if(exportPartialResults){
+          if(!is.null(out.points)){
+            if(verbose){
+              logger.info("Exporting point output to ESRI shapefile...")
+            }
+            filename <- paste0(domain, "_point_", refs[x,"factsheet"])
+            exportFeatures(out.points, file.path = exportPath, file.name = filename)
+          }
+        }
+      }
+    }, file = paste0(paste("log", domain, refs[x,"factsheet"], sep="_"), ".txt"))
+      
     return(out.points)
   }
   
