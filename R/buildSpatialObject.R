@@ -68,6 +68,16 @@ buildSpatialObject <- function(item, lang, host, domain,
   #collect list of Spatial objects for water areas
   waterareas <- items[items$category %in% c("WaterArea","LandArea"),]
   area.sp.list <- readSpatialObjects(wfs, waterareas, cleanGeom, cleanStrategy, verbose)
+  #patch in case of WFS failure
+  anyNullArea <- all(sapply(area.sp.list, is.null))
+  if(any(sapply(area.sp.list, is.null))){
+    it <- 1
+    while(anyNullArea & it<=3){
+      area.sp.list <- readSpatialObjects(wfs, waterareas, cleanGeom, cleanStrategy, verbose)
+      anyNullArea <- all(sapply(area.sp.list, is.null))
+      it <- it+1
+    }
+  }
   
   #collect andlist of spatial objects for species distributions
   species <- items[items$category == "SpeciesDistribution",]
