@@ -102,12 +102,12 @@ buildSpatialObject <- function(item, lang, host, domain,
       #apply an approximated bbox union (retain the largest spatial object)
       spRef <- NULL
       spRef.env <- NULL
-      for(i in 1:(length(species.sp.list)-1)){
+      for(i in 1:length(species.sp.list)){
         if(i == 1){
           spRef <- species.sp.list[[1]]
           spRef.env <- gEnvelope(spRef)
         }
-        nextsp <- species.sp.list[[i+1]]
+        nextsp <- species.sp.list[[i]]
         nextsp.env <- gEnvelope(nextsp)
         if(gArea(nextsp.env) > gArea(spRef.env)){
           spRef <- nextsp
@@ -185,21 +185,20 @@ buildSpatialObject <- function(item, lang, host, domain,
     }
     
     #perform union
-    if(verbose){
-      logger.info("Geoprocessing union...")
-    }
     if(!is.null(int)){
+      if(verbose) logger.info("Geoprocessing union...")
       out.sp <- int
     }else{
-      out.sp <- sp.list[[1]] #to discuss this rule
+      if(verbose) logger.info("Pickup smallest envelope...")
+      out.sp <- sp.list[[1]]
     }
     out.sp <- gUnaryUnion(out.sp)
     out.sp <- clgeo_Clean(out.sp, strategy = cleanStrategy)
-    
   }
   
   #wrap output as SpatialPolygonsDataFrame object
   if(!is.null(out.sp)){
+    if(is.na(proj4string(out.sp))) proj4string(out.sp) <- CRS("+init=epsg:4326")
     out.sp <- spChFIDs(out.sp, FigisID)
     areaCRS <- CRS("+proj=eck4 +lon_0=Central Meridian +x_0=False Easting +y_0=False Northing")
     pout.sp <- NULL
