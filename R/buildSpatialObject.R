@@ -34,7 +34,7 @@ buildSpatialObject <- function(item, lang, host, domain,
   logger.info("----------------------------------------------------")
   logger.info(sprintf("Build spatial object for %s factsheet %s...", domain, item))
   
-  fs <- fetchFactsheetInfo(item, lang, domain, host, verbose = verbose)
+  fs <- fetchFactsheetInfo(item, lang, domain, host, species = FALSE, verbose = verbose)
   fs.sp <- NULL
   if(!is.null(fs)){
     if(nrow(fs$waterRefs) == 0){

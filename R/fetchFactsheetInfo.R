@@ -401,6 +401,7 @@ fetchFactsheetInfo <- function(factsheet, lang, domain, host, species = FALSE, v
       
       #water references
       waterAreaList <- fetchFactsheetAreaInfo(fsXML)
+      waterRefs <- waterAreaList
       if(species){
         speciesList <- fetchFactsheetSpeciesInfo(fsXML, domain)
         waterRefs <- rbind(waterAreaList, speciesList)
