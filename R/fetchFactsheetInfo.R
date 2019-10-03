@@ -343,6 +343,7 @@ fetchFactsheetAgencyInfo <- function(xml){
 #' @param domain an object of class "character" giving the FIRMS domain
 #' @param host an object of class "character" giving the host
 #' @param verbose if logs should be printed out. Default is TRUE
+#' @param species Include species information. Default is FALSE
 #' @return an object of class "list" giving the factsheet information
 #'         (title and georef)
 #' 
@@ -350,7 +351,7 @@ fetchFactsheetAgencyInfo <- function(xml){
 #' 
 #' @author Emmanuel Blondel, \email{emmanuel.blondel1@@gmail.com}
 #'
-fetchFactsheetInfo <- function(factsheet, lang, domain, host, verbose = TRUE){
+fetchFactsheetInfo <- function(factsheet, lang, domain, host, species = FALSE, verbose = TRUE){
   
   if(verbose) logger.info(sprintf("Extracting information for factsheet %s", factsheet))
   
@@ -400,8 +401,10 @@ fetchFactsheetInfo <- function(factsheet, lang, domain, host, verbose = TRUE){
       
       #water references
       waterAreaList <- fetchFactsheetAreaInfo(fsXML)
-      speciesList <- fetchFactsheetSpeciesInfo(fsXML, domain)
-      waterRefs <- rbind(waterAreaList, speciesList)
+      if(species){
+        speciesList <- fetchFactsheetSpeciesInfo(fsXML, domain)
+        waterRefs <- rbind(waterAreaList, speciesList)
+      }
       if(!is.null(waterRefs)){
         if(nrow(waterRefs) > 0){
           waterRefs <- waterRefs[order(waterRefs$weight, decreasing = TRUE),]

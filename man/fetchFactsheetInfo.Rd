@@ -4,7 +4,8 @@
 \alias{fetchFactsheetInfo}
 \title{fetchFactsheetInfo}
 \usage{
-fetchFactsheetInfo(factsheet, lang, domain, host, verbose = TRUE)
+fetchFactsheetInfo(factsheet, lang, domain, host, species = FALSE,
+  verbose = TRUE)
 }
 \arguments{
 \item{factsheet}{an object of class "character" giving the factsheet FIGIS id}
@@ -14,6 +15,8 @@ fetchFactsheetInfo(factsheet, lang, domain, host, verbose = TRUE)
 \item{domain}{an object of class "character" giving the FIRMS domain}
 
 \item{host}{an object of class "character" giving the host}
+
+\item{species}{Include species information. Default is FALSE}
 
 \item{verbose}{if logs should be printed out. Default is TRUE}
 }

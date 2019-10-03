@@ -69,7 +69,7 @@ buildSpatialObject <- function(item, lang, host, domain,
   waterareas <- items[items$category %in% c("WaterArea","LandArea"),]
   area.sp.list <- readSpatialObjects(wfs, waterareas, cleanGeom, cleanStrategy, verbose)
   #patch in case of WFS failure
-  anyNullArea <- all(sapply(area.sp.list, is.null))
+  anyNullArea <- any(sapply(area.sp.list, is.null))
   if(any(sapply(area.sp.list, is.null))){
     it <- 1
     while(anyNullArea & it<=3){
