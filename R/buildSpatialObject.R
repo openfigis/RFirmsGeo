@@ -140,6 +140,9 @@ buildSpatialObject <- function(item, lang, host, domain,
   }
   if(length(sp.list) > 1){
     
+    #prioritize by area
+    sp.list <- sp.list[order(sapply(sp.list, gArea))]
+    
     if(verbose){
       logger.info("Geoprocessing sequential intersection...")
       logger.info(sprintf("Sequential intersection with %s (%s intersections)",length(sp.list), length(sp.list)-1))
