@@ -208,6 +208,7 @@ buildSpatialObject <- function(item, lang, host, domain,
   
   #wrap output as SpatialPolygonsDataFrame object
   if(!is.null(out.sp)){
+    out.sp <- RFigisGeo::clipToGlobalExtent(out.sp)
     if(is.na(proj4string(out.sp))) proj4string(out.sp) <- CRS("+init=epsg:4326")
     out.sp <- spChFIDs(out.sp, FigisID)
     areaCRS <- CRS("+proj=eck4 +lon_0=Central Meridian +x_0=False Easting +y_0=False Northing")
