@@ -467,7 +467,7 @@ fetchFactsheetReferences <- function(host, domain, verbose = TRUE){
   domainUrl <- sprintf("%s/figis/monikerj/%s", host, domainName)
   
   logger.info(paste0("GET ", domainUrl))
-  reqText <- getURL(domainUrl)
+  reqText <- httr::content(httr::GET(domainUrl),"text")
   domainXml <- xmlParse(reqText)
   xmlURIList <- sapply(getNodeSet(domainXml, "//arrayitem"), xmlGetAttr, "xmlURI")
   xmlURIList <- xmlURIList[!sapply(xmlURIList, is.null)]

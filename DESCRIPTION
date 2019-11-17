@@ -1,13 +1,13 @@
 Package: RFirmsGeo
 Version: 0.2-3
-Date: 2019-10-28
+Date: 2019-11-17
 Title: Tools for georeferencing FIRMS stocks and fisheries
 Author: Emmanuel Blondel <emmanuel.blondel1@gmail.com>
 Maintainer: Emmanuel Blondel <emmanuel.blondel1@gmail.com>
 Depends:
     R (>= 2.15)
 Imports:
-    methods, sf, sp, rgeos, maptools, ows4R, RFigisGeo, cleangeo, RCurl, XML, geometa
+    methods, sf, sp, rgeos, maptools, ows4R, RFigisGeo, cleangeo, RCurl, XML, geometa, httr
 Suggests:
     parallel, testthat
 Description:
