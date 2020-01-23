@@ -23,10 +23,10 @@ buildSpatialMetadata <- function(sp){
   mdId <- paste0("firms-mv-map-", domain)
   mdTitle <- sprintf("FIRMS %s placemarks", domainName)
   mdDate <- Sys.time()
-  mdLinkHTML <- sprintf("http://www.fao.org/geonetwork/srv/eng/main.home?uuid=%s", mdId)
-  mdLinkXML <- sprintf("http://www.fao.org/geonetwork/srv/eng/csw?service=CSW&request=GetRecordById&Version=2.0.2&elementSetName=full&outputSchema=http://www.isotc211.org/2005/gmd&id=%s", mdId)
+  mdLinkHTML <- sprintf("http://www.fao.org/fishery/geonetwork/srv/eng/main.home?uuid=%s", mdId)
+  mdLinkXML <- sprintf("http://www.fao.org/fishery/geonetwork/srv/eng/csw?service=CSW&request=GetRecordById&Version=2.0.2&elementSetName=full&outputSchema=http://www.isotc211.org/2005/gmd&id=%s", mdId)
   mdLayerTitle <- sprintf("%s_all_points", domain)
-  mdLinkWFS <- sprintf("http://www.fao.org/figis/geoserver/firms/ows?SERVICE=WFS&request=GetFeature&version=1.0.0&typeName=%s", mdLayerTitle)
+  mdLinkWFS <- sprintf("http://www.fao.org/fishery/geoserver/firms/ows?SERVICE=WFS&request=GetFeature&version=1.0.0&typeName=%s", mdLayerTitle)
   
   md = ISOMetadata$new()
   md$setFileIdentifier(mdId)
@@ -131,7 +131,7 @@ buildSpatialMetadata <- function(sp){
   
   #graphic overview
   go <- ISOBrowseGraphic$new(
-    fileName = sprintf("http://www.fao.org/figis/geoserver/wms?service=WMS&version=1.1.0&request=GetMap&layers=firms:%s,fifao:UN_CONTINENT2&styles=&bbox=-180,-90,180,90&width=771&height=330&srs=EPSG:4326&format=image/png", mdLayerTitle),
+    fileName = sprintf("http://www.fao.org/fishery/geoserver/wms?service=WMS&version=1.1.0&request=GetMap&layers=firms:%s,fifao:UN_CONTINENT2&styles=&bbox=-180,-90,180,90&width=771&height=330&srs=EPSG:4326&format=image/png", mdLayerTitle),
     fileDescription = "Map Overview",
     fileType = "image/png"
   )
@@ -185,7 +185,7 @@ buildSpatialMetadata <- function(sp){
   dto <- ISODigitalTransferOptions$new()  
   #add WMS
   wms <- ISOOnlineResource$new()
-  wms$setLinkage("http://www.fao.org/figis/geoserver/firms/ows?SERVICE=WMS")
+  wms$setLinkage("http://www.fao.org/fishery/geoserver/firms/ows?SERVICE=WMS")
   wms$setName(mdLayerTitle)
   wms$setDescription(mdTitle)
   wms$setProtocol("OGC:WMS-1.3.0-http-get-map")
