@@ -1,6 +1,6 @@
 Package: RFirmsGeo
-Version: 0.2-4
-Date: 2020-01-23
+Version: 0.2-5
+Date: 2021-01-18
 Title: Tools for georeferencing FIRMS stocks and fisheries
 Author: Emmanuel Blondel <emmanuel.blondel1@gmail.com>
 Maintainer: Emmanuel Blondel <emmanuel.blondel1@gmail.com>
@@ -16,4 +16,4 @@ Description:
 License: GPL (>= 2)
 URL: https://github.com/openfigis/RFirmsGeo
 BugReports: https://github.com/openfigis/RFirmsGeo/issues
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0

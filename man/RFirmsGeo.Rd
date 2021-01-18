@@ -3,7 +3,6 @@
 \docType{package}
 \name{RFirmsGeo}
 \alias{RFirmsGeo}
-\alias{RFirmsGeo-package}
 \title{Tools for georeferencing FIRMS stocks and fisheries}
 \description{
 RFirmsGeo provides a set of facilities to georeference FIRMS stocks and fisheries
@@ -13,8 +12,8 @@ factsheet web-resources.
 \tabular{ll}{
    Package: \tab RFirmsGeo\cr
    Type: \tab Package\cr
-   Version: \tab 0.2-4\cr
-   Date: \tab 2020-01-23\cr
+   Version: \tab 0.2-5\cr
+   Date: \tab 2021-01-18\cr
    License: \tab GPL(>=2.0)\cr
    LazyLoad: \tab yes\cr
  }

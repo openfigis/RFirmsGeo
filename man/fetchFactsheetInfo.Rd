@@ -4,8 +4,14 @@
 \alias{fetchFactsheetInfo}
 \title{fetchFactsheetInfo}
 \usage{
-fetchFactsheetInfo(factsheet, lang, domain, host, species = FALSE,
-  verbose = TRUE)
+fetchFactsheetInfo(
+  factsheet,
+  lang,
+  domain,
+  host,
+  species = FALSE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{factsheet}{an object of class "character" giving the factsheet FIGIS id}

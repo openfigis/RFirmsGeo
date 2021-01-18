@@ -4,10 +4,19 @@
 \alias{buildSpatialDataset}
 \title{buildSpatialDataset}
 \usage{
-buildSpatialDataset(host, domain, cleanGeom = TRUE,
-  cleanStrategy = "BUFFER", unionStrategy = "bbox", verbose = TRUE,
-  ids = NULL, runParallel = FALSE, runCores = 1,
-  exportPartialResults = FALSE, exportPath = getwd())
+buildSpatialDataset(
+  host,
+  domain,
+  cleanGeom = TRUE,
+  cleanStrategy = "BUFFER",
+  unionStrategy = "bbox",
+  verbose = TRUE,
+  ids = NULL,
+  runParallel = FALSE,
+  runCores = 1,
+  exportPartialResults = FALSE,
+  exportPath = getwd()
+)
 }
 \arguments{
 \item{host}{an object of class "character" giving the host}

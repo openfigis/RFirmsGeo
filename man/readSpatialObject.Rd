@@ -4,8 +4,13 @@
 \alias{readSpatialObject}
 \title{readSpatialObject}
 \usage{
-readSpatialObject(wfs, layer, cleanGeom = TRUE,
-  cleanStrategy = "BUFFER", verbose = TRUE)
+readSpatialObject(
+  wfs,
+  layer,
+  cleanGeom = TRUE,
+  cleanStrategy = "BUFFER",
+  verbose = TRUE
+)
 }
 \arguments{
 \item{wfs}{instance of WFS client, object of class \code{WFSClient} from \pkg{ows4R}}

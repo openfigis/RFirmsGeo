@@ -331,6 +331,25 @@ fetchFactsheetAgencyInfo <- function(xml){
   return(org)
 }
 
+#' @name fetchFactsheetJurisdictionalInfo
+#' @aliases fetchFactsheetJurisdictionalInfo
+#' @title fetchFactsheetJurisdictionalInfo
+#' 
+#' @description 
+#' A function to fetch the factsheet jurisdictional dist from a factsheet XML
+#' 
+#' @param xml
+#' @return an object of class "character"
+#' 
+#' @author Emmanuel Blondel, \email{emmanuel.blondel1@@gmail.com}
+#' 
+fetchFactsheetJurisdictionalInfo <- function(xml){
+  fiNS <- "http://www.fao.org/fi/figis/devcon/"
+  out <- xpathSApply(xml, "//fi:FIGISDoc/fi:AqRes/fi:GeoDist/fi:JurisdictionalDist", xmlGetAttr, "Value", namespaces = c(fi = fiNS))
+  if(length(out)==0) out <- NA
+  return(out)
+}
+
 #' @name fetchFactsheetInfo
 #' @aliases fetchFactsheetInfo
 #' @title fetchFactsheetInfo
@@ -423,12 +442,16 @@ fetchFactsheetInfo <- function(factsheet, lang, domain, host, species = FALSE, v
       #owner agency
       agency <- fetchFactsheetAgencyInfo(fsXML)
       
+      #jurisdictionalDist
+      jurisdictionalDist <- fetchFactsheetJurisdictionalInfo(fsXML)
+      
       out <- list(
         title = title,
         georef = georef,
         waterRefs = waterRefs,
         category = category,
-        agency = agency
+        agency = agency,
+        jurisdictionalDist = jurisdictionalDist 
       )
      
     }

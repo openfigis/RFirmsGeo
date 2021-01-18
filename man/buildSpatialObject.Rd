@@ -4,8 +4,17 @@
 \alias{buildSpatialObject}
 \title{buildSpatialObject}
 \usage{
-buildSpatialObject(item, lang, host, domain, wfs, cleanGeom = TRUE,
-  cleanStrategy = "BUFFER", unionStrategy = "bbox", verbose = TRUE)
+buildSpatialObject(
+  item,
+  lang,
+  host,
+  domain,
+  wfs,
+  cleanGeom = TRUE,
+  cleanStrategy = "BUFFER",
+  unionStrategy = "bbox",
+  verbose = TRUE
+)
 }
 \arguments{
 \item{item}{an object of class "character" giving the factsheet id}
