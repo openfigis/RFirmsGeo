@@ -10,7 +10,7 @@
 #' \tabular{ll}{
 #'    Package: \tab RFirmsGeo\cr
 #'    Type: \tab Package\cr
-#'    Version: \tab 0.2-6\cr
+#'    Version: \tab 0.2-5\cr
 #'    Date: \tab 2021-06-28\cr
 #'    License: \tab GPL(>=2.0)\cr
 #'    LazyLoad: \tab yes\cr
