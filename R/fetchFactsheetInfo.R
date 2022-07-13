@@ -487,7 +487,7 @@ fetchFactsheetReferences <- function(host, domain, verbose = TRUE){
                        "resource" = "firmsmarineresources",
                        "fishery" = "firmsfisheries"
   )
-  domainUrl <- sprintf("%s/figis/monikerj/%s", host, domainName)
+  domainUrl <- sprintf("%s/figis/moniker/%s", host, domainName)
   
   logger.info(paste0("GET ", domainUrl))
   reqText <- httr::content(httr::GET(domainUrl),"text")

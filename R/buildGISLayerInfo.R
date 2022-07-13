@@ -31,7 +31,7 @@
 #'
 buildGISLayerInfo <- function(category, codesystem, code){
   
-  gsUrl <- "http://www.fao.org/figis/geoserver/ows" 
+  gsUrl <- "https://www.fao.org/fishery/geoserver/ows" 
   
   #infoLevel (applies for fishing areas)
   infoLevel <- switch(codesystem,
