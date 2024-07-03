@@ -27,7 +27,7 @@
 #' @note function used internally to build FIRMS spatial objects
 #' 
 #' @author Emmanuel Blondel, \email{emmanuel.blondel1@@gmail.com}
-#'
+#' @export
 #'
 buildGISLayerInfo <- function(category, codesystem, code){
   
