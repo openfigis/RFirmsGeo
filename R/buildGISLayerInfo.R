@@ -80,7 +80,7 @@ buildGISLayerInfo <- function(category, codesystem, code){
       rank = NA,
       weight = 6)
     
-  #4. gfcm_sub_area
+  #4.a gfcm_sub_area
   }else if(codesystem == "gfcm_sub_area"){
     layer <- list(
       url = gsUrl,
@@ -90,7 +90,17 @@ buildGISLayerInfo <- function(category, codesystem, code){
       level = infoLevel,
       rank = NA,
       weight = 2)
-    
+  
+  #4.b siofa_sub_area
+  }else if(codesystem == "siofa_sub_area"){  
+    layer <- list(
+      url = gsUrl,
+      typeName = paste0("fifao:",toupper(codesystem)),
+      propertyName = "SubAreaNo",
+      propertyValue = code,
+      level = infoLevel,
+      rank = NA,
+      weight = 2)
   #5. pac_tuna_rep
   }else if(codesystem == "pac_tuna_rep"){
     layer <- list(
