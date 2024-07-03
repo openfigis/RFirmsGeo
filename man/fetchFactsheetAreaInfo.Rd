@@ -4,10 +4,12 @@
 \alias{fetchFactsheetAreaInfo}
 \title{fetchFactsheetAreaInfo}
 \usage{
-fetchFactsheetAreaInfo(xml)
+fetchFactsheetAreaInfo(x, domain)
 }
 \arguments{
-\item{xml}{an object of class "XmlInternalDocument"}
+\item{x}{inventory service item (as retrieved through web-service)}
+
+\item{domain}{inventory domain (fishery/resource)}
 }
 \value{
 an object of class "data.frame" listing the GIS water area layer infos

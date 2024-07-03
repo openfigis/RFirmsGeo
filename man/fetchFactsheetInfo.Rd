@@ -4,25 +4,12 @@
 \alias{fetchFactsheetInfo}
 \title{fetchFactsheetInfo}
 \usage{
-fetchFactsheetInfo(
-  factsheet,
-  lang,
-  domain,
-  host,
-  species = FALSE,
-  verbose = TRUE
-)
+fetchFactsheetInfo(x, domain, verbose = TRUE)
 }
 \arguments{
-\item{factsheet}{an object of class "character" giving the factsheet FIGIS id}
+\item{x}{inventory service item (as retrieved through web-service)}
 
-\item{lang}{the language in which the factsheet is available}
-
-\item{domain}{an object of class "character" giving the FIRMS domain}
-
-\item{host}{an object of class "character" giving the host}
-
-\item{species}{Include species information. Default is FALSE}
+\item{domain}{inventory domain (fishery/resource)}
 
 \item{verbose}{if logs should be printed out. Default is TRUE}
 }
