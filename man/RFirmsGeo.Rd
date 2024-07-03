@@ -2,6 +2,7 @@
 % Please edit documentation in R/RFirmsGeo.R
 \docType{package}
 \name{RFirmsGeo}
+\alias{RFirmsGeo-package}
 \alias{RFirmsGeo}
 \title{Tools for georeferencing FIRMS stocks and fisheries}
 \description{
@@ -17,6 +18,14 @@ factsheet web-resources.
    License: \tab GPL(>=2.0)\cr
    LazyLoad: \tab yes\cr
  }
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/openfigis/RFirmsGeo}
+  \item Report bugs at \url{https://github.com/openfigis/RFirmsGeo/issues}
+}
+
 }
 \author{
 Emmanuel Blondel \email{emmanuel.blondel1@gmail.com}

@@ -3,7 +3,6 @@
 #' RFirmsGeo provides a set of facilities to georeference FIRMS stocks and fisheries
 #' factsheet web-resources.
 #'
-#' @docType package
 #' @name RFirmsGeo
 #' @author Emmanuel Blondel \email{emmanuel.blondel1@@gmail.com}
 #' @details
@@ -16,4 +15,4 @@
 #'    LazyLoad: \tab yes\cr
 #'  }
 #' 
-NULL
+"_PACKAGE"
