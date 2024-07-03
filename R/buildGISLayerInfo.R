@@ -75,7 +75,7 @@ buildGISLayerInfo <- function(category, codesystem, code){
       url = gsUrl,
       typeName = paste0("fifao:",toupper(codesystem)),
       propertyName = "LME_NUMBER",
-      propertyValue = code,
+      propertyValue = toupper(code),
       level = infoLevel,
       rank = NA,
       weight = 6)
@@ -86,7 +86,7 @@ buildGISLayerInfo <- function(category, codesystem, code){
       url = gsUrl,
       typeName = paste0("fifao:",toupper(codesystem)),
       propertyName = "SMU_CODE",
-      propertyValue = code,
+      propertyValue = toupper(code),
       level = infoLevel,
       rank = NA,
       weight = 2)
@@ -97,7 +97,7 @@ buildGISLayerInfo <- function(category, codesystem, code){
       url = gsUrl,
       typeName = paste0("fifao:",toupper(codesystem)),
       propertyName = "REP_AREA",
-      propertyValue = code,
+      propertyValue = toupper(code),
       level = infoLevel,
       rank = NA,
       weight = 2)
@@ -108,7 +108,7 @@ buildGISLayerInfo <- function(category, codesystem, code){
       url = gsUrl,
       typeName = paste0("fifao:",toupper(codesystem)),
       propertyName = "RFB",
-      propertyValue = code,
+      propertyValue = toupper(code),
       level = infoLevel,
       rank = NA,
       weight = 1)
@@ -119,7 +119,7 @@ buildGISLayerInfo <- function(category, codesystem, code){
       url = gsUrl,
       typeName = "fifao:NJA",
       propertyName = "ISO3",
-      propertyValue = code,
+      propertyValue = toupper(code),
       level = infoLevel,
       rank = NA,
       weight = 10)
@@ -130,7 +130,7 @@ buildGISLayerInfo <- function(category, codesystem, code){
       url = gsUrl,
       typeName = "fifao:NJA",
       propertyName = "ISO3",
-      propertyValue = code,
+      propertyValue = toupper(code),
       level = infoLevel,
       rank = NA,
       weight = 10)
