@@ -4,13 +4,7 @@
 \alias{readSpatialObjects}
 \title{readSpatialObjects}
 \usage{
-readSpatialObjects(
-  wfs,
-  layers,
-  cleanGeom = TRUE,
-  cleanStrategy = TRUE,
-  verbose = TRUE
-)
+readSpatialObjects(wfs, layers, verbose = TRUE)
 }
 \arguments{
 \item{wfs}{instance of WFS client, object of class \code{WFSClient} from \pkg{ows4R}}
@@ -18,13 +12,10 @@ readSpatialObjects(
 \item{layers}{an object of class "data.frame" (single record) giving information
 about a GIS web-layer to query}
 
-\item{cleanGeom}{an object of class "logical" indicating if geometries have to
-be validated with \pkg{cleangeo}. Default value is TRUE.}
-
-\item{cleanStrategy}{an object of class "character". Default value is "BUFFER"}
-
 \item{verbose}{an object of class "logical" either logs have to be printed out.
 Default value is TRUE.}
+
+\item{cleanGeom}{an object of class "logical" indicating if geometries have to}
 }
 \value{
 an object of class "list" listing the spatial objects
