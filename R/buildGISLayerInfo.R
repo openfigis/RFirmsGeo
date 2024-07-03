@@ -92,10 +92,10 @@ buildGISLayerInfo <- function(category, codesystem, code){
       weight = 2)
   
   #4.b siofa_sub_area
-  }else if(codesystem == "siofa_sub_area"){  
+  }else if(codesystem %in% c("siofa", "siofa_sub_area")){  
     layer <- list(
       url = gsUrl,
-      typeName = paste0("fifao:",toupper(codesystem)),
+      typeName = paste0("fifao:",toupper("SIOFA")),
       propertyName = "SubAreaNo",
       propertyValue = code,
       level = infoLevel,
@@ -151,7 +151,7 @@ buildGISLayerInfo <- function(category, codesystem, code){
       url = gsUrl,
       typeName = paste0("fifao:",toupper(codesystem)),
       propertyName = toupper(codesystem),
-      propertyValue = code,
+      propertyValue = toupper(code),
       level = infoLevel,
       rank = NA,
       weight = 1)
