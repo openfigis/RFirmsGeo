@@ -63,6 +63,7 @@ readSpatialObject <- function(wfs, layer, verbose = TRUE){
   }
   if(!is.null(out)) if(nrow(out)==0L) out <- NULL
   if(!is.null(out)){
+    if(is.na(sf::st_crs(out))) sf::st_crs(out) = 4326 #bug in ows4R?
     out <- sf::st_make_valid(out)
   }else{
     logger.warn("Unknown or Empty filtered GIS web-resource")  
@@ -94,8 +95,8 @@ readSpatialObjects <- function(wfs, layers, verbose = TRUE){
   logger.info("Read spatial objects...")
   sf.layers <- lapply(unique(layers$typeName), function(x){
     geoitem <- layers[layers$typeName == x,]
-    sp <- readSpatialObject(wfs, geoitem, verbose)
-    return(sp)
+    sf <- readSpatialObject(wfs, geoitem, verbose)
+    return(sf)
   })
   sf.layers <- sf.layers[!sapply(sf.layers, is.null)]
 }

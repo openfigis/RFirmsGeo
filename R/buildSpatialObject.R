@@ -5,18 +5,9 @@
 #' @description
 #' A function to build a spatial object for a given factsheet
 #'
-#' @param item an object of class "character" giving the factsheet id
-#' @param lang the language in which the factsheet is available
-#' @param host an object of class "character" giving the host
-#' @param domain an object of class "character" giving the FIRMS domain
+#' @param x FIRMS inventory item (as retrieved through web-services)
+#' @param domain inventory domain (fishery/resource)
 #' @param wfs an object of class "WFSClient" from \pkg{ows4R} package
-#' @param cleanGeom an object of class "logical" indicating if geometries have to
-#'        be validated with \pkg{cleangeo}. Default value is TRUE.
-#' @param cleanStrategy an object of class "character". Default is "BUFFER"
-#' @param unionStrategy an object of class "character". Accepted values are "union"
-#' (pure geoprocessing union - time consuming -), "bbox" (strategy to estimate the
-#' largest spatial object to retain, by comparing envelopes, and results much less
-#' time consuming). Default value is "bbox".
 #' @param verbose an object of class "logical" either logs have to be printed out.
 #'        Default value is TRUE.
 #' @return an object of class "SpatialPolygonsDataFrame"
@@ -24,18 +15,19 @@
 #' @note end-user function
 #' 
 #' @author Emmanuel Blondel, \email{emmanuel.blondel1@@gmail.com}
+#' @export
 #'
-buildSpatialObject <- function(item, lang, host, domain,
+buildSpatialObject <- function(x,
+                               domain,
                                wfs,
-                               cleanGeom = TRUE, cleanStrategy = "BUFFER",
-                               unionStrategy = "bbox",
                                verbose = TRUE){
+  
+  item = x$document$invObsId
   
   logger.info("----------------------------------------------------")
   logger.info(sprintf("Build spatial object for %s factsheet %s...", domain, item))
   
-  fs <- fetchFactsheetInfo(item, lang, domain, host, species = FALSE, verbose = verbose)
-  fs.sp <- NULL
+  fs <- fetchFactsheetInfo(x, domain, verbose = verbose)
   if(!is.null(fs)){
     if(nrow(fs$waterRefs) == 0){
       logger.warn(sprintf("No geographic reference for %s factsheet %s...", domain, item))
@@ -55,97 +47,38 @@ buildSpatialObject <- function(item, lang, host, domain,
     logger.warn(sprintf("No geographic reference for %s factsheet %s...", domain, item))
     return(NULL)
   }
-  
-  title <- fs$title
-  georef <- fs$georef
-  items <- fs$waterRefs
-  category <- fs$category
-  agency <- fs$agency
-    
-  #figisID
-  FigisID <- unique(items$FigisID)
-  
-  #collect list of Spatial objects for water areas
+
+  #collect list of Spatial objects (sf collections) for water areas
+  items = fs$waterRefs
   waterareas <- items[items$category %in% c("WaterArea","LandArea"),]
-  area.sp.list <- readSpatialObjects(wfs, waterareas, cleanGeom, cleanStrategy, verbose)
+  area.sf.list <- readSpatialObjects(wfs, waterareas, verbose)
   #patch in case of WFS failure
-  anyNullArea <- any(sapply(area.sp.list, is.null))
-  if(any(sapply(area.sp.list, is.null))){
+  anyNullArea <- any(sapply(area.sf.list, is.null))
+  if(any(sapply(area.sf.list, is.null))){
     it <- 1
     while(anyNullArea & it<=3){
-      area.sp.list <- readSpatialObjects(wfs, waterareas, cleanGeom, cleanStrategy, verbose)
-      anyNullArea <- all(sapply(area.sp.list, is.null))
+      area.sf.list <- readSpatialObjects(wfs, waterareas, verbose)
+      anyNullArea <- all(sapply(area.sf.list, is.null))
       it <- it+1
     }
   }
   
-  #collect andlist of spatial objects for species distributions
-  species <- items[items$category == "SpeciesDistribution",]
-  species.sp.list <- readSpatialObjects(wfs, species, cleanGeom, cleanStrategy, verbose)
-  
-  #apply union strategy with species distributions (if more than one)
-  if(length(species.sp.list) > 1){
-    
-    if(verbose){
-      logger.info(sprintf("Unifying %s species distributions...",length(species.sp.list)))
-      logger.info(sprintf("Union strategy : %s ", unionStrategy))
-    }
-    
-    if(unionStrategy == "union"){
-      #apply a pure geoprocessing union
-      spUnion <- NULL
-      for(i in 1:length(species.sp.list)){
-        if(i == 1){
-          spUnion <- species.sp.list[[i]]
-        }else{
-          spUnion <- gUnion(spUnion, species.sp.list[[i]])
-          spUnion <- clgeo_Clean(spUnion, strategy = cleanStrategy) 
-        }
-      }
-      spUnionId <- paste(species$typeName, collapse="_union_")
-      spUnion <- spChFIDs(spUnion, spUnionId)
-      spUnion.df <- data.frame(gml_id = spUnionId, stringsAsFactors = FALSE)
-      row.names(spUnion.df) <- spUnionId
-      species.sp.list <- SpatialPolygonsDataFrame(Sr = spUnion, data = spUnion.df)
-      
-    }else if(unionStrategy == "bbox"){
-      #apply an approximated bbox union (retain the largest spatial object)
-      spRef <- NULL
-      spRef.env <- NULL
-      for(i in 1:length(species.sp.list)){
-        if(i == 1){
-          spRef <- species.sp.list[[1]]
-          spRef.env <- gEnvelope(spRef)
-        }
-        nextsp <- species.sp.list[[i]]
-        nextsp.env <- gEnvelope(nextsp)
-        if(gArea(nextsp.env) > gArea(spRef.env)){
-          spRef <- nextsp
-          spRef.env <- nextsp.env
-        }
-      }
-      species.sp.list <- spRef
-    }
-  }
-  
-  #collect list of spatial objects
-  sp.list <- c(area.sp.list, species.sp.list)
-  sp.list <- sp.list[!sapply(sp.list, is.null)]
+  sf.list = area.sf.list #we don't use anymore possible species distributions
   
   #geospatial processing
-  out.sp <- NULL
-  if(length(sp.list) == 1){
+  out.sf <- NULL
+  if(length(sf.list) == 1){
     logger.info(sprintf("Grabing unique geographic reference for %s factsheet %s...",domain,item))
-    out.sp <- gUnaryUnion(sp.list[[1]])
+    out.sf <- sf::st_union(sf.list[[1]])
   }
-  if(length(sp.list) > 1){
+  if(length(sf.list) > 1){
     
     #prioritize by area
-    sp.list <- sp.list[order(sapply(sp.list, gArea))]
+    sf.list <- sf.list[order(sapply(sf.list, sf::st_area))]
     
     if(verbose){
       logger.info("Geoprocessing sequential intersection...")
-      logger.info(sprintf("Sequential intersection with %s (%s intersections)",length(sp.list), length(sp.list)-1))
+      logger.info(sprintf("Sequential intersection with %s (%s intersections)",length(sf.list), length(sf.list)-1))
     }
     
     #performing intersection
@@ -154,21 +87,21 @@ buildSpatialObject <- function(item, lang, host, domain,
     }
     int <- NULL
     #1st intersection
-    if(!gContainsProperly(gEnvelope(sp.list[[2]]),gEnvelope(sp.list[[1]]))){
-      int <- tryCatch(intersection(sp.list[[1]], sp.list[[2]]),
-                      error = function(err){
-                        if(verbose){
-                          logger.error("Intersection internal error. Skip intersection process")
-                        }
-                      })
-      
-      if(!is.null(int)){
-        int <- clgeo_Clean(int, strategy = cleanStrategy)
-      }
+    #if(!gContainsProperly(gEnvelope(sf.list[[2]]),gEnvelope(sf.list[[1]]))){
+    int <- tryCatch(sf::st_intersection(sf.list[[1]], sf.list[[2]]),
+                    error = function(err){
+                      if(verbose){
+                        logger.error("Intersection internal error. Skip intersection process")
+                      }
+                    })
+    
+    if(!is.null(int)){
+      int <- sf::st_make_valid(int)
     }
+    #}
     #subsequent intersections
-    if(length(sp.list) > 2 & !is.null(int)){
-      for(i in 3:length(sp.list)){
+    if(length(sf.list) > 2 & !is.null(int)){
+      for(i in 3:length(sf.list)){
         
         intNb <- i-1
         if(verbose){
@@ -176,8 +109,8 @@ buildSpatialObject <- function(item, lang, host, domain,
         }
         
         tmpint <- NULL
-        if(!gContainsProperly(gEnvelope(sp.list[[i]]),gEnvelope(int))){
-          tmpint <- tryCatch(intersection(int, sp.list[[i]]),
+        #if(!gContainsProperly(gEnvelope(sp.list[[i]]),gEnvelope(int))){
+          tmpint <- tryCatch(sf::st_intersection(int, sf.list[[i]]),
                           error = function(err){
                             if(verbose){
                               logger.error("Intersection internal error. Skip intersection process")
@@ -187,9 +120,9 @@ buildSpatialObject <- function(item, lang, host, domain,
           if(!is.null(tmpint)){
             int <- tmpint
           }
-        }
+        #}
         if(!is.null(int)){
-          cleanint <- clgeo_Clean(int, strategy = cleanStrategy)
+          cleanint <- sf::st_make_valid(int)
           int <- cleanint
         }else{
           break;
@@ -200,49 +133,49 @@ buildSpatialObject <- function(item, lang, host, domain,
     #perform union
     if(!is.null(int)){
       if(verbose) logger.info("Geoprocessing union...")
-      out.sp <- int
+      out.sf <- int
     }else{
       if(verbose) logger.info("Pickup smallest envelope...")
-      out.sp <- sp.list[[1]]
+      out.sf <- sf.list[[1]]
     }
-    out.sp <- gUnaryUnion(out.sp)
-    out.sp <- clgeo_Clean(out.sp, strategy = cleanStrategy)
+    out.sf <- sf::st_union(out.sf)
+    out.sf <- sf::st_make_valid(out.sf)
   }
   
   #wrap output as SpatialPolygonsDataFrame object
-  if(!is.null(out.sp)){
-    out.sp <- RFigisGeo::clipToGlobalExtent(out.sp)
-    if(is.na(proj4string(out.sp))) proj4string(out.sp) <- CRS("+init=epsg:4326")
-    out.sp <- spChFIDs(out.sp, FigisID)
-    areaCRS <- CRS("+proj=eck4")
-    pout.sp <- NULL
-    pout.sp <- tryCatch(spTransform(out.sp, areaCRS),
+  if(!is.null(out.sf)){
+    if(is.na(sf::st_crs(out.sf))) sf::st_crs(out.sf) = 4326
+    areaCRS <- "+proj=eck4"
+    pout.sf <- NULL
+    pout.sf <- tryCatch(sf::st_transform(out.sf, areaCRS),
                         error = function(err){
                           if(verbose){
                             logger.error("Error in calculating the projected area.")
                           }
-                          pout.sp <<- NULL
+                          pout.sf <<- NULL
                         })
     parea <- NA
-    if(!is.null(pout.sp)) parea <- gArea(pout.sp)
-    out.df <- data.frame(
+    if(!is.null(pout.sf)) parea <- as.numeric(sf::st_area(pout.sf))
+    out.sf <- sf::st_sf(
+      the_geom = out.sf,
       DOMAIN = domain,
-      CATEGORY = category,
-      FIGIS_ID = FigisID,
-      LANG = lang,
-      TITLE = title,
-      GEOREF = georef$title,
-      SCALE = georef$scale,
-      AGENCY = agency,
+      CATEGORY = fs$category,
+      FIGIS_ID = fs$figis_id,
+      LANG = fs$lang,
+      TITLE = fs$title,
+      GEOREF = fs$georef,
+      SCALE = fs$scale,
+      AGENCY = fs$agency,
       SURFACE = parea,
-      stringsAsFactors = FALSE)
-    for(column in colnames(out.df)){
-      if(class(out.df[,column]) == "character") Encoding(out.df[,column]) <- "UTF-8"
+      stringsAsFactors = FALSE
+    )
+    for(column in colnames(out.sf)){
+      if(class(out.sf[[column]])[1] == "character") Encoding(out.sf[[column]]) <- "UTF-8"
     }
     
-    row.names(out.df) <- out.df$FIGIS_ID
-    out.sp <- SpatialPolygonsDataFrame(Sr = out.sp, data = out.df, match.ID = TRUE)
+    row.names(out.sf) <- out.sf$FIGIS_ID
+  
   }
   
-  return(out.sp)
+  return(out.sf)
 }

@@ -4,38 +4,14 @@
 \alias{buildSpatialObject}
 \title{buildSpatialObject}
 \usage{
-buildSpatialObject(
-  item,
-  lang,
-  host,
-  domain,
-  wfs,
-  cleanGeom = TRUE,
-  cleanStrategy = "BUFFER",
-  unionStrategy = "bbox",
-  verbose = TRUE
-)
+buildSpatialObject(x, domain, wfs, verbose = TRUE)
 }
 \arguments{
-\item{item}{an object of class "character" giving the factsheet id}
+\item{x}{FIRMS inventory item (as retrieved through web-services)}
 
-\item{lang}{the language in which the factsheet is available}
-
-\item{host}{an object of class "character" giving the host}
-
-\item{domain}{an object of class "character" giving the FIRMS domain}
+\item{domain}{inventory domain (fishery/resource)}
 
 \item{wfs}{an object of class "WFSClient" from \pkg{ows4R} package}
-
-\item{cleanGeom}{an object of class "logical" indicating if geometries have to
-be validated with \pkg{cleangeo}. Default value is TRUE.}
-
-\item{cleanStrategy}{an object of class "character". Default is "BUFFER"}
-
-\item{unionStrategy}{an object of class "character". Accepted values are "union"
-(pure geoprocessing union - time consuming -), "bbox" (strategy to estimate the
-largest spatial object to retain, by comparing envelopes, and results much less
-time consuming). Default value is "bbox".}
 
 \item{verbose}{an object of class "logical" either logs have to be printed out.
 Default value is TRUE.}

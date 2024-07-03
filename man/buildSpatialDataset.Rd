@@ -7,15 +7,13 @@
 buildSpatialDataset(
   host,
   domain,
-  cleanGeom = TRUE,
-  cleanStrategy = "BUFFER",
-  unionStrategy = "bbox",
-  verbose = TRUE,
+  doc,
   ids = NULL,
   runParallel = FALSE,
   runCores = 1,
   exportPartialResults = FALSE,
-  exportPath = getwd()
+  exportPath = getwd(),
+  verbose = TRUE
 )
 }
 \arguments{
@@ -23,18 +21,7 @@ buildSpatialDataset(
 
 \item{domain}{an object of class "character" giving the FIRMS domain}
 
-\item{cleanGeom}{an object of class "logical" indicating if geometries have to
-be validated with \pkg{cleangeo}. Default value is TRUE.}
-
-\item{cleanStrategy}{an object of class "character". Default is 'BUFFER'}
-
-\item{unionStrategy}{an object of class "character". Accepted values are "union"
-(pure geoprocessing union - time consuming -), "bbox" (strategy to estimate the
-largest spatial object to retain, by comparing envelopes, and results much less
-time consuming). Default value is "bbox".}
-
-\item{verbose}{an object of class "logical" either logs have to be printed out.
-Default value is TRUE.}
+\item{doc}{a FIRMS inventory doc (retrieved as JSON through web-service)}
 
 \item{ids}{a vector of resource IDs for which the computation has to be run}
 
@@ -46,9 +33,12 @@ Default value is TRUE.}
 is FALSE.}
 
 \item{exportPath}{the path were shapefiles should be exported}
+
+\item{verbose}{an object of class "logical" either logs have to be printed out.
+Default value is TRUE.}
 }
 \value{
-an object of class "SpatialPolygonsDataFrame"
+an object of class "sf"
 }
 \description{
 A function to build a spatial dataset for a given factsheet domain.
