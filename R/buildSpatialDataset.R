@@ -37,7 +37,7 @@ buildSpatialDataset <- function(host, domain, doc, ids = NULL,
   #list of items/lang per domain
   refs = doc
   if(!is.null(ids)){
-    refs <- doc[sapply(doc, function(x){x$document$invObsId %in% ids})]
+    refs <- doc[sapply(doc, function(x){x$document$inventoryId %in% ids})]
   }
   
   #wfs client
@@ -52,6 +52,8 @@ buildSpatialDataset <- function(host, domain, doc, ids = NULL,
       out <- NULL
       out.points <- NULL
       
+      print(ref$document$inventoryId)
+      
       #produce polygon dataset
       out <- buildSpatialObject(ref, domain, wfs, verbose)
       if(exportPartialResults){
@@ -59,7 +61,7 @@ buildSpatialDataset <- function(host, domain, doc, ids = NULL,
           if(verbose){
             logger.info("Exporting polygon output to ESRI shapefile...")
           }
-          filename <- paste0(domain, "_", ref$document$invObsId)
+          filename <- paste0(domain, "_", ref$document$inventoryId)
           sf::st_write(out, file.path(exportPath, paste0(filename, ".shp")))
         }
       }
@@ -72,12 +74,12 @@ buildSpatialDataset <- function(host, domain, doc, ids = NULL,
             if(verbose){
               logger.info("Exporting point output to ESRI shapefile...")
             }
-            filename <- paste0(domain, "_point_", ref$document$invObsId)
+            filename <- paste0(domain, "_point_", ref$document$inventoryId)
             esf::st_write(out, file.path(exportPath, paste0(filename, ".shp")))
           }
         }
       }
-    }, file = paste0(paste("log", domain, ref$document$invObsId, sep="_"), ".txt"))
+    }, file = paste0(paste("log", domain, ref$document$inventoryId, sep="_"), ".txt"))
       
     return(out.points)
   }

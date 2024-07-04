@@ -22,7 +22,7 @@ buildSpatialObject <- function(x,
                                wfs,
                                verbose = TRUE){
   
-  item = x$document$invObsId
+  item = x$document$inventoryId
   
   logger.info("----------------------------------------------------")
   logger.info(sprintf("Build spatial object for %s factsheet %s...", domain, item))
@@ -74,7 +74,7 @@ buildSpatialObject <- function(x,
   if(length(sf.list) > 1){
     
     #prioritize by area
-    sf.list <- sf.list[order(sapply(sf.list, sf::st_area))]
+    sf.list <- sf.list[order(sapply(sf.list, function(x){ sum(as.numeric(sf::st_area(x)))}))]
     
     if(verbose){
       logger.info("Geoprocessing sequential intersection...")
@@ -95,8 +95,12 @@ buildSpatialObject <- function(x,
                       }
                     })
     
-    if(!is.null(int)){
-      int <- sf::st_make_valid(int)
+    if(!is.null(int)) {
+      if(nrow(int)>0){
+        int <- sf::st_make_valid(int)
+      }else{
+        int <- sf.list[[1]]
+      }
     }
     #}
     #subsequent intersections
@@ -118,12 +122,13 @@ buildSpatialObject <- function(x,
                             tmpint <<- NULL
                           })
           if(!is.null(tmpint)){
-            int <- tmpint
+            if(nrow(tmpint)>0){
+              int <- tmpint
+            }
           }
         #}
         if(!is.null(int)){
-          cleanint <- sf::st_make_valid(int)
-          int <- cleanint
+          int <- sf::st_make_valid(int)
         }else{
           break;
         }
@@ -161,6 +166,7 @@ buildSpatialObject <- function(x,
       DOMAIN = domain,
       CATEGORY = fs$category,
       FIGIS_ID = fs$figis_id,
+      OLD_ID = fs$old_id,
       LANG = fs$lang,
       TITLE = fs$title,
       GEOREF = fs$georef,
