@@ -34,7 +34,7 @@ readSpatialObject <- function(wfs, layer, verbose = TRUE){
     key <- gisItem$propertyName
     value <- gisItem$propertyValue
     if(!is.na(key) | !is.na(value)){
-      gisFilter = sprintf("%s = '%s'", key, value)
+      gisFilter = sprintf("strToLowerCase(%s) = '%s'", key, value)
       if(is.null(cqlFilter)){
         cqlFilter = gisFilter
       }else{
