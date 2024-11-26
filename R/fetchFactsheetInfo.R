@@ -31,7 +31,7 @@ fetchFactsheetAreaInfo <- function(x, domain){
       }
       areas
     },
-    "resource" = sapply(x$document$distribution$primaryArea, function(area){area$figisId})
+    "resource" = sapply(x$document$distribution$primaryArea, function(area){if(!is.null(area$figisId)) area$figisId else area$value})
   )
   if(length(waterareas)>0) waterareas = waterareas[!sapply(waterareas, is.null)]
   waterAreaList = do.call("rbind", lapply(waterareas,function(waterarea){
