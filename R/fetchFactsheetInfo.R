@@ -24,14 +24,14 @@ fetchFactsheetAreaInfo <- function(x, domain){
   waterareas = switch(domain,
     "fishery" = {
       areas = list() 
-      if(length(x$document$fishingarea$fisheryPrimaryAreaCodes)>0) areas = sapply(x$document$fishingarea$fisheryPrimaryAreaCodes, function(area){area$figisId})
+      if(length(x$document$fishingarea$fisheryPrimaryAreaCodes)>0) areas = sapply(x$document$fishingarea$fisheryPrimaryAreaCodes, function(area){area$value})
       if(length(areas)==0 & length(x$document$perspective$geoRefLandarea)>0){
         category = "LandArea"
         areas = x$document$perspective$geoRefLandarea$value #no figisId
       }
       areas
     },
-    "resource" = sapply(x$document$distribution$primaryArea, function(area){if(!is.null(area$figisId)) area$figisId else area$value})
+    "resource" = sapply(x$document$distribution$primaryArea, function(area){area$value})
   )
   if(length(waterareas)>0) waterareas = waterareas[!sapply(waterareas, is.null)]
   waterAreaList = do.call("rbind", lapply(waterareas,function(waterarea){
