@@ -75,7 +75,7 @@ buildGISLayerInfo <- function(category, codesystem, code){
       url = gsUrl,
       typeName = paste0("fifao:",toupper(codesystem)),
       propertyName = "LME_NUMBER",
-      propertyValue = code,
+      propertyValue = paste0(code,".0"),
       level = infoLevel,
       rank = NA,
       weight = 6)
