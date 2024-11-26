@@ -28,7 +28,7 @@ buildSpatialDataset <- function(host, domain, doc, ids = NULL,
                                 exportPartialResults = FALSE, exportPath = getwd(),
                                 verbose = TRUE){
   
-  if(!(host %in% c("https://figisapps.fao.org", "https://www.fao.org")))
+  if(!(host %in% c("https://fisheries.review.fao.org", "https://www.fao.org")))
     stop("Unknown FAO host")
   
   if(!(domain %in% c("resource","fishery")))
@@ -42,7 +42,7 @@ buildSpatialDataset <- function(host, domain, doc, ids = NULL,
   
   #wfs client
   wfs_verbose <- ifelse(verbose, "DEBUG", "INFO")
-  wfs <- ows4R::WFSClient$new(paste0(host,"/",  if(startsWith(host, "https://figisapps")) "figis" else "fishery","/geoserver/ows"), "1.0.0", logger = wfs_verbose)
+  wfs <- ows4R::WFSClient$new(paste0(host,"/fishery/geoserver/ows"), "1.0.0", logger = wfs_verbose)
   
   #doBuild
   doBuild <- function(ref, domain, wfs, verbose){
