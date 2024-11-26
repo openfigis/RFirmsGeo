@@ -97,6 +97,7 @@ fetchFactsheetInfo <- function(x, domain, verbose = TRUE){
         
     ),
     figis_id = x$document$inventoryId,
+    inv_obs_id = x$document$invObsId,
     old_id = x$document$figisId,
     lang = x$document$language,
     title = x$document$title,
