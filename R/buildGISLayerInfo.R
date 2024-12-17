@@ -145,6 +145,27 @@ buildGISLayerInfo <- function(category, codesystem, code){
       rank = NA,
       weight = 10)
     
+  
+  }else if(codesystem == "ices_fu_nep"){
+    layer <- list(
+      url = gsUrl,
+      typeName = "fifao:Nephrops_Functional_Units",
+      propertyName = "AREA_CODE",
+      propertyValue = code,
+      level = infoLevel,
+      rank = NA,
+      weight = 1)
+    
+  }else if(codesystem == "ices_sa"){
+    layer <- list(
+      url = gsUrl,
+      typeName = "fifao:Sandeel_Functional_Units",
+      propertyName = "AREA_CODE",
+      propertyValue = code,
+      level = infoLevel,
+      rank = NA,
+      weight = 1)
+    
   #other layers (water area refs)
   }else{
     layer <- list(
