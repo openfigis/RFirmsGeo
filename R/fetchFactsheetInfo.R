@@ -24,7 +24,7 @@ fetchFactsheetAreaInfo <- function(x, domain){
   waterareas = switch(domain,
     "fishery" = {
       areas = list() 
-      if(length(x$fishingarea$fisheryPrimaryAreaCodes)>0) areas = sapply(xfishingarea$fisheryPrimaryAreaCodes, function(area){area$key})
+      if(length(x$fishingarea$fisheryPrimaryAreaCodes)>0) areas = sapply(x$fishingarea$fisheryPrimaryAreaCodes, function(area){area$key})
       if(length(areas)==0 & length(x$perspective$geoRefLandarea)>0){
         category = "LandArea"
         areas = x$perspective$geoRefLandarea$key #no figisId
