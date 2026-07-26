@@ -124,7 +124,7 @@ buildGISLayerInfo <- function(category, codesystem, code){
       weight = 1)
   
   #7. eez (nja)  
-  }else if(codesystem %in% c("eez","nja")){
+  }else if(codesystem %in% c("eez","wja")){
     layer <- list(
       url = gsUrl,
       typeName = "fifao:NJA",
