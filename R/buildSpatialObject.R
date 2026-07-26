@@ -22,7 +22,7 @@ buildSpatialObject <- function(x,
                                wfs,
                                verbose = TRUE){
   
-  item = x$document$inventoryId
+  item = x$inventoryId
   
   logger.info("----------------------------------------------------")
   logger.info(sprintf("Build spatial object for %s factsheet %s...", domain, item))
