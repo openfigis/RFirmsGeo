@@ -24,14 +24,14 @@ fetchFactsheetAreaInfo <- function(x, domain){
   waterareas = switch(domain,
     "fishery" = {
       areas = list() 
-      if(length(x$document$fishingarea$fisheryPrimaryAreaCodes)>0) areas = sapply(x$document$fishingarea$fisheryPrimaryAreaCodes, function(area){area$value})
-      if(length(areas)==0 & length(x$document$perspective$geoRefLandarea)>0){
+      if(length(x$fishingarea$fisheryPrimaryAreaCodes)>0) areas = sapply(x$document$fishingarea$fisheryPrimaryAreaCodes, function(area){area$key})
+      if(length(areas)==0 & length(x$perspective$geoRefLandarea)>0){
         category = "LandArea"
-        areas = x$document$perspective$geoRefLandarea$value #no figisId
+        areas = x$document$perspective$geoRefLandarea$key #no figisId
       }
       areas
     },
-    "resource" = sapply(x$document$distribution$primaryArea, function(area){area$value})
+    "resource" = sapply(x$distribution$primaryArea, function(area){area$key})
   )
   if(length(waterareas)>0) waterareas = waterareas[!sapply(waterareas, is.null)]
   waterAreaList = do.call("rbind", lapply(waterareas,function(waterarea){
@@ -86,30 +86,30 @@ fetchFactsheetInfo <- function(x, domain, verbose = TRUE){
 
   out <- list(
     category = switch(domain,
-      "fishery" = stringr::str_to_title(x$document$perspective$thematicApproach$value),
+      "fishery" = stringr::str_to_title(stringr::str_replace_all(x$perspective$thematicApproach$key, "_", " ")),
       "resource" = {
-        if(!is.null(x$document$structure$singleStock)){
-          if(x$document$structure$singleStock) "Biological Stock" else "Marine Resource"
+        if(!is.null(x$structure$biologicalStock$key)){
+          if(x$structure$biologicalStock$key == "yes") "Biological Stock" else "Marine Resource"
         }else{
           "Marine Resource"
         }
       } 
         
     ),
-    figis_id = x$document$inventoryId,
-    inv_obs_id = x$document$invObsId,
-    old_id = x$document$figisId,
-    lang = x$document$language,
-    title = x$document$title,
+    figis_id = x$inventoryId,
+    inv_obs_id = x$invObsId,
+    old_id = x$figisId,
+    lang = x$language,
+    title = x$title,
     georef = switch(domain,
-      "fishery" = x$document$perspective$geoRefTitle,
-      "resource" = if(!is.null(x$document$distribution$areaName)) x$document$distribution$areaName else ""
+      "fishery" = x$perspective$geoRefTitle,
+      "resource" = if(!is.null(x$distribution$areaName)) x$distribution$areaName else ""
     ),
     scale = switch(domain,
-     "fishery" = if(!is.null(x$document$perspective$spatialScale$value)) x$document$perspective$spatialScale$value else "",
-     "resource" = if(!is.null(x$document$distribution$spatialScale$value)) x$document$distribution$spatialScale$value else ""
+     "fishery" = if(!is.null(x$perspective$spatialScale$key)) x$perspective$spatialScale$key else "",
+     "resource" = if(!is.null(x$distribution$spatialScale$key)) x$distribution$spatialScale$key else ""
     ),
-    agency = x$document$objectSource$dataProvider$code,
+    agency = x$objectSource$dataProvider$code,
     waterRefs = fetchFactsheetAreaInfo(x, domain)
   )
   
