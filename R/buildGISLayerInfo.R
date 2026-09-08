@@ -102,7 +102,7 @@ buildGISLayerInfo <- function(category, codesystem, code){
       rank = NA,
       weight = 2)
   #5. pac_tuna_rep
-  }else if(codesystem == "pac_tuna_rep"){
+  }else if(codesystem %in% c("pac_tuna_rep","iattc")){
     layer <- list(
       url = gsUrl,
       typeName = paste0("fifao:",toupper(codesystem)),
