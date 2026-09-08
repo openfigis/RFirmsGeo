@@ -166,12 +166,12 @@ buildGISLayerInfo <- function(category, codesystem, code){
       rank = NA,
       weight = 1)
     
-  #other layers (water area refs)
+  #other layers (deferred to grsf_areas)
   }else{
     layer <- list(
       url = gsUrl,
-      typeName = paste0("fifao:",toupper(codesystem)),
-      propertyName = toupper(codesystem),
+      typeName = "grsf:grsf_areas",
+      propertyName = "ID",
       propertyValue = code,
       level = infoLevel,
       rank = NA,
