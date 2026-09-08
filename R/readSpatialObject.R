@@ -35,6 +35,9 @@ readSpatialObject <- function(wfs, layer, verbose = TRUE){
     value <- gisItem$propertyValue
     if(!is.na(key) | !is.na(value)){
       gisFilter = sprintf("strToLowerCase(%s)='%s'", key, tolower(value))
+      if(layer$typeName == "grsf:grsf_areas"){
+        gisFilter = URLencode(sprintf("%s = '%s'", key, value))
+      }
       if(is.null(cqlFilter)){
         cqlFilter = gisFilter
       }else{
