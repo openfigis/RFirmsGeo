@@ -172,7 +172,7 @@ buildGISLayerInfo <- function(category, codesystem, code){
       url = gsUrl,
       typeName = "grsf:grsf_areas",
       propertyName = "ID",
-      propertyValue = code,
+      propertyValue = paste0(codesystem,":",code),
       level = infoLevel,
       rank = NA,
       weight = 1)
