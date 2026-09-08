@@ -81,10 +81,10 @@ buildGISLayerInfo <- function(category, codesystem, code){
       weight = 6)
     
   #4.a gfcm_sub_area
-  }else if(codesystem == "gfcm_sub_area"){
+  }else if(codesystem %in% c("gfcm_sub_area", "gfcm")){
     layer <- list(
       url = gsUrl,
-      typeName = paste0("fifao:",toupper(codesystem)),
+      typeName = "fifao:GFCM_SUB_AREA",
       propertyName = "SMU_CODE",
       propertyValue = code,
       level = infoLevel,
