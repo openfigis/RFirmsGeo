@@ -45,18 +45,19 @@ fetchFactsheetAreaInfo <- function(x, domain){
     waterAreaList <- unique(waterAreaList)
     
     #skip uppper levels for fishing areas
-    ranks <- unique(waterAreaList$rank)
-    ranks <- ranks[!is.na(ranks)]
-    if(length(ranks) > 0){
-      filtered <- waterAreaList[!is.na(waterAreaList$rank),]
-      filtered <- do.call("rbind",
-                          lapply(ranks,
-                                 function(x){
-                                   df <- filtered[filtered$rank == x,]
-                                   df <- df[df$level == max(df$level),]
-                                 }))
-      waterAreaList <- rbind(filtered, waterAreaList[is.na(waterAreaList$rank),])
-    }
+    #NEEDS TO BE REVISE with the flatening of of the 'fao' namespace
+    # ranks <- unique(waterAreaList$rank)
+    # ranks <- ranks[!is.na(ranks)]
+    # if(length(ranks) > 0){
+    #   filtered <- waterAreaList[!is.na(waterAreaList$rank),]
+    #   filtered <- do.call("rbind",
+    #                       lapply(ranks,
+    #                              function(x){
+    #                                df <- filtered[filtered$rank == x,]
+    #                                df <- df[df$level == max(df$level),]
+    #                              }))
+    #   waterAreaList <- rbind(filtered, waterAreaList[is.na(waterAreaList$rank),])
+    # }
   }
   
   return(waterAreaList)
