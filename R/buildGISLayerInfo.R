@@ -116,7 +116,7 @@ buildGISLayerInfo <- function(category, codesystem, code){
   }else if(codesystem %in% c("rfb_comp","rfb")){
     layer <- list(
       url = gsUrl,
-      typeName = paste0("fifao:",toupper(codesystem)),
+      typeName = "fifao:RFB_COMP",
       propertyName = "RFB",
       propertyValue = code,
       level = infoLevel,
