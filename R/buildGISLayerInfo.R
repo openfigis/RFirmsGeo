@@ -113,7 +113,7 @@ buildGISLayerInfo <- function(category, codesystem, code){
       weight = 2)
   
   #6. rfb_comp
-  }else if(codesystem == "rfb_comp"){
+  }else if(codesystem %in% c("rfb_comp","rfb")){
     layer <- list(
       url = gsUrl,
       typeName = paste0("fifao:",toupper(codesystem)),
