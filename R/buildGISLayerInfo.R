@@ -45,129 +45,129 @@ buildGISLayerInfo <- function(category, codesystem, code){
   fishingareaWeight <- infoLevel
   
   #cases
-  #1. fishing areas
-  layer <- NULL
-  if(codesystem %in% c("fao", "fao_major","fao_sub_area",
-                       "fao_div","fao_sub_div","fao_sub_unit")){
-    layer <- list(
-      url = gsUrl,
-      typeName = "fifao:FAO_AREAS_ERASE_LOWRES",
-      propertyName = "F_CODE",
-      propertyValue = code,
-      level = infoLevel,
-      rank = substr(code,1,2),
-      weight = fishingareaWeight)
-  
-  #2. species distributions
-  }else if(codesystem == "fao3alpha"){
-    layer <- list(
-      url = gsUrl,
-      typeName = sprintf("species:SPECIES_DIST_%s",toupper(code)),
-      propertyName = NA,
-      propertyValue = NA,
-      level = infoLevel,
-      rank = NA,
-      weight = 0)
-  
-  #3. lmes
-  }else if(codesystem == "lme"){
-    layer <- list(
-      url = gsUrl,
-      typeName = paste0("fifao:",toupper(codesystem)),
-      propertyName = "LME_NUMBER",
-      propertyValue = paste0(code,".0"),
-      level = infoLevel,
-      rank = NA,
-      weight = 6)
-    
-  #4.a gfcm_sub_area
-  }else if(codesystem %in% c("gfcm_sub_area", "gfcm")){
-    layer <- list(
-      url = gsUrl,
-      typeName = "fifao:GFCM_SUB_AREA",
-      propertyName = "SMU_CODE",
-      propertyValue = code,
-      level = infoLevel,
-      rank = NA,
-      weight = 2)
-  
-  #4.b siofa_sub_area
-  }else if(codesystem %in% c("siofa", "siofa_sub_area")){  
-    layer <- list(
-      url = gsUrl,
-      typeName = paste0("fifao:",toupper("SIOFA_SUB_AREA")),
-      propertyName = "SubAreaNo",
-      propertyValue = code,
-      level = infoLevel,
-      rank = NA,
-      weight = 2)
-  #5. pac_tuna_rep
-  }else if(codesystem %in% c("pac_tuna_rep","iattc")){
-    layer <- list(
-      url = gsUrl,
-      typeName = "fifao:PAC_TUNA_REP",
-      propertyName = "REP_AREA",
-      propertyValue = code,
-      level = infoLevel,
-      rank = NA,
-      weight = 2)
-  
-  #6. rfb_comp
-  }else if(codesystem %in% c("rfb_comp","rfb")){
-    layer <- list(
-      url = gsUrl,
-      typeName = "fifao:RFB_COMP",
-      propertyName = "RFB",
-      propertyValue = code,
-      level = infoLevel,
-      rank = NA,
-      weight = 1)
-  
-  #7. eez (nja)  
-  }else if(codesystem %in% c("eez","wja")){
-    layer <- list(
-      url = gsUrl,
-      typeName = "cwp:wja_level1",
-      propertyName = "code",
-      propertyValue = code,
-      level = infoLevel,
-      rank = NA,
-      weight = 10)
-  
-  #8. land areas (for the timebeing refer to corresponding EEZ)
-  }else if(codesystem == "iso3"){
-    layer <- list(
-      url = gsUrl,
-      typeName = "fifao:NJA",
-      propertyName = "ISO3",
-      propertyValue = toupper(code),
-      level = infoLevel,
-      rank = NA,
-      weight = 10)
-    
-  
-  }else if(codesystem == "ices_fu_nep"){
-    layer <- list(
-      url = gsUrl,
-      typeName = "fifao:Nephrops_Functional_Units",
-      propertyName = "AREA_CODE",
-      propertyValue = code,
-      level = infoLevel,
-      rank = NA,
-      weight = 1)
-    
-  }else if(codesystem == "ices_sa"){
-    layer <- list(
-      url = gsUrl,
-      typeName = "fifao:Sandeel_Functional_Units",
-      propertyName = "AREA_CODE",
-      propertyValue = code,
-      level = infoLevel,
-      rank = NA,
-      weight = 1)
-    
-  #other layers (deferred to grsf_areas)
-  }else{
+  # #1. fishing areas
+  # layer <- NULL
+  # if(codesystem %in% c("fao", "fao_major","fao_sub_area",
+  #                      "fao_div","fao_sub_div","fao_sub_unit")){
+  #   layer <- list(
+  #     url = gsUrl,
+  #     typeName = "fifao:FAO_AREAS_ERASE_LOWRES",
+  #     propertyName = "F_CODE",
+  #     propertyValue = code,
+  #     level = infoLevel,
+  #     rank = substr(code,1,2),
+  #     weight = fishingareaWeight)
+  # 
+  # #2. species distributions
+  # }else if(codesystem == "fao3alpha"){
+  #   layer <- list(
+  #     url = gsUrl,
+  #     typeName = sprintf("species:SPECIES_DIST_%s",toupper(code)),
+  #     propertyName = NA,
+  #     propertyValue = NA,
+  #     level = infoLevel,
+  #     rank = NA,
+  #     weight = 0)
+  # 
+  # #3. lmes
+  # }else if(codesystem == "lme"){
+  #   layer <- list(
+  #     url = gsUrl,
+  #     typeName = paste0("fifao:",toupper(codesystem)),
+  #     propertyName = "LME_NUMBER",
+  #     propertyValue = paste0(code,".0"),
+  #     level = infoLevel,
+  #     rank = NA,
+  #     weight = 6)
+  #   
+  # #4.a gfcm_sub_area
+  # }else if(codesystem %in% c("gfcm_sub_area", "gfcm")){
+  #   layer <- list(
+  #     url = gsUrl,
+  #     typeName = "fifao:GFCM_SUB_AREA",
+  #     propertyName = "SMU_CODE",
+  #     propertyValue = code,
+  #     level = infoLevel,
+  #     rank = NA,
+  #     weight = 2)
+  # 
+  # #4.b siofa_sub_area
+  # }else if(codesystem %in% c("siofa", "siofa_sub_area")){  
+  #   layer <- list(
+  #     url = gsUrl,
+  #     typeName = paste0("fifao:",toupper("SIOFA_SUB_AREA")),
+  #     propertyName = "SubAreaNo",
+  #     propertyValue = code,
+  #     level = infoLevel,
+  #     rank = NA,
+  #     weight = 2)
+  # #5. pac_tuna_rep
+  # }else if(codesystem %in% c("pac_tuna_rep","iattc")){
+  #   layer <- list(
+  #     url = gsUrl,
+  #     typeName = "fifao:PAC_TUNA_REP",
+  #     propertyName = "REP_AREA",
+  #     propertyValue = code,
+  #     level = infoLevel,
+  #     rank = NA,
+  #     weight = 2)
+  # 
+  # #6. rfb_comp
+  # }else if(codesystem %in% c("rfb_comp","rfb")){
+  #   layer <- list(
+  #     url = gsUrl,
+  #     typeName = "fifao:RFB_COMP",
+  #     propertyName = "RFB",
+  #     propertyValue = code,
+  #     level = infoLevel,
+  #     rank = NA,
+  #     weight = 1)
+  # 
+  # #7. eez (nja)  
+  # }else if(codesystem %in% c("eez","wja")){
+  #   layer <- list(
+  #     url = gsUrl,
+  #     typeName = "cwp:wja_level1",
+  #     propertyName = "code",
+  #     propertyValue = code,
+  #     level = infoLevel,
+  #     rank = NA,
+  #     weight = 10)
+  # 
+  # #8. land areas (for the timebeing refer to corresponding EEZ)
+  # }else if(codesystem == "iso3"){
+  #   layer <- list(
+  #     url = gsUrl,
+  #     typeName = "fifao:NJA",
+  #     propertyName = "ISO3",
+  #     propertyValue = toupper(code),
+  #     level = infoLevel,
+  #     rank = NA,
+  #     weight = 10)
+  #   
+  # 
+  # }else if(codesystem == "ices_fu_nep"){
+  #   layer <- list(
+  #     url = gsUrl,
+  #     typeName = "fifao:Nephrops_Functional_Units",
+  #     propertyName = "AREA_CODE",
+  #     propertyValue = code,
+  #     level = infoLevel,
+  #     rank = NA,
+  #     weight = 1)
+  #   
+  # }else if(codesystem == "ices_sa"){
+  #   layer <- list(
+  #     url = gsUrl,
+  #     typeName = "fifao:Sandeel_Functional_Units",
+  #     propertyName = "AREA_CODE",
+  #     propertyValue = code,
+  #     level = infoLevel,
+  #     rank = NA,
+  #     weight = 1)
+  #   
+  # #other layers (deferred to grsf_areas)
+  # }else{
     layer <- list(
       url = gsUrl,
       typeName = "grsf:grsf_areas",
@@ -175,8 +175,9 @@ buildGISLayerInfo <- function(category, codesystem, code){
       propertyValue = paste0(codesystem,":",code),
       level = infoLevel,
       rank = NA,
-      weight = 1)
-  }
+      weight = 1
+    )
+  #}
   
   layer <- c(category = category, layer)
   layer <- as.data.frame(layer, stringsAsFactors = FALSE)
