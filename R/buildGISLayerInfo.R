@@ -47,7 +47,7 @@ buildGISLayerInfo <- function(category, codesystem, code){
   #cases
   #1. fishing areas
   layer <- NULL
-  if(codesystem %in% c("fao_major","fao_sub_area",
+  if(codesystem %in% c("fao", "fao_major","fao_sub_area",
                        "fao_div","fao_sub_div","fao_sub_unit")){
     layer <- list(
       url = gsUrl,
