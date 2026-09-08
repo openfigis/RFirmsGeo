@@ -177,7 +177,7 @@ buildGISLayerInfo <- function(category, codesystem, code){
       rank = NA,
       weight = 1
     )
-  }
+  #}
   
   layer <- c(category = category, layer)
   layer <- as.data.frame(layer, stringsAsFactors = FALSE)
