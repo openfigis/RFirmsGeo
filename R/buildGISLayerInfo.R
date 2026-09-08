@@ -127,8 +127,8 @@ buildGISLayerInfo <- function(category, codesystem, code){
   }else if(codesystem %in% c("eez","wja")){
     layer <- list(
       url = gsUrl,
-      typeName = "fifao:NJA",
-      propertyName = "ISO3",
+      typeName = "cwp:wja_level1",
+      propertyName = "code",
       propertyValue = code,
       level = infoLevel,
       rank = NA,
