@@ -105,7 +105,7 @@ buildGISLayerInfo <- function(category, codesystem, code){
   }else if(codesystem %in% c("pac_tuna_rep","iattc")){
     layer <- list(
       url = gsUrl,
-      typeName = paste0("fifao:",toupper(codesystem)),
+      typeName = "fifao:PAC_TUNA_REP",
       propertyName = "REP_AREA",
       propertyValue = code,
       level = infoLevel,
